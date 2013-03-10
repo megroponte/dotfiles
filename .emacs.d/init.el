@@ -243,12 +243,14 @@
 (add-hook 'ruby-mode 'ruby-mode-hooks)
 
 ;;; Ruby flymake
+(require 'flymake)
+
 (defun flymake-ruby-init ()
   (list "ruby" (list "-c" (flymake-init-create-temp-buffer-copy
 			   'flymake-create-temp-inplace))))
-(add-to-list 'flymake-allowed-file-name-masks
-	     '(\\".rb\\" flymake-ruby-init))
 
+(add-to-list 'flymake-allowed-file-name-masks
+	     '("\\.rb\\'" flymake-ruby-init))
 (add-to-list 'flymake-err-line-patterns
 	     '(\\"(.*\\):(\\([0-9]+\\)): \\(.*\\)" 1 2 nil 3))
 
