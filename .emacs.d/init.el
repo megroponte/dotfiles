@@ -223,6 +223,10 @@
 (setq anything-samewindow nil)
 (push '("*anything*" :height 20) popwin:special-display-config)
 
+;; GitフロントエンドEggの設定
+(when (executable-find "git")
+  (require 'egg nil t))
+
 ;; Ruby
 (require 'ruby-electric nil t)
 (when (require 'ruby-block nil t)
