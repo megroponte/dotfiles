@@ -223,6 +223,31 @@
 (setq anything-samewindow nil)
 (push '("*anything*" :height 20) popwin:special-display-config)
 
+;; Ruby
+(require 'ruby-electric nil t)
+(when (require 'ruby-block nil t)
+  (setq ruby-block-heighlight-toggle t))
+(autoload 'run-ruby "inf-ruby"
+  "Run as inferior Ruby process")
+(autoload 'inf-ruby-keys "inf-ruby"
+  "Set local key defs for inf-ruby in ruby-mode")
+
+(defun ruby-mode-hooks ()
+  (inf-ruby-keys)
+  (ruby-electric-mode t)
+  (ruby-block-mode t))
+(add-hook 'ruby-mode 'ruby-mode-hooks)
+
+;;; Ruby flymake
+(defun flymake-ruby-init ()
+  (list "ruby" (list "-c" (flymake-init-create-temp-buffer-copy
+			   'flymake-create-temp-inplace))))
+(add-to-list 'flymake-allowed-file-name-masks
+	     '(\\".rb\\" flymake-ruby-init))
+
+(add-to-list 'flymake-err-line-patterns
+	     '(\\"(.*\\):(\\([0-9]+\\)): \\(.*\\)" 1 2 nil 3))
+
 ;; javascript
 (defun js-indent-hook()
   (setq js-indent-level 2
