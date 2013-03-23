@@ -97,6 +97,9 @@
 ;; デフォルトの透明度を設定する
 (add-to-list 'default-frame-alist '(alpha . 85))
 
+;; タイトルバーにファイルのフルパスを表示
+(setq frame-title-format "%f")
+
 ;; カレントウィンドウの透明度を変更する
 (set-frame-parameter nil 'alpha 85)
 
@@ -203,7 +206,7 @@
 (when (require 'descbinds-anything nil t)
   (descbinds-anything-install))
 
-;; auto-completeの設定
+;; auto-complete
 (when (require 'auto-complete-config nil t)
   (add-to-list 'ac-dictionary-directories
 	       "~/.emacs.d/elisp/ac-dict")
@@ -265,7 +268,7 @@
 (defun js-indent-hook()
   (setq js-indent-level 2
 	js-expr-indent-offset 2
-	indent-tas-mode nil)
+	indent-tabs-mode nil)
   (defun my-js-indent-line ()
     (intercactive)
     (let* ((parse-status (save-excursion (syntax-ppss (point-at-bol))))
