@@ -151,7 +151,7 @@
 ;; http://0xcc.net/blog/archives/000041.html
 (set-default-coding-systems 'utf-8)
 
-;; "C-t" でウィンドウを切り替える。
+;; "C-t" でウィンドウを切り替える。初期値はtranspose-chars
 (define-key global-map (kbd "C-t") 'other-window)
 
 ;; "C-m"で改行とインデントを行う
@@ -217,12 +217,18 @@
     (define-key elscreen-map (kbd "C-z") 'suspend-emacs)))
 
 ;; http://d.hatena.ne.jp/m2ym/20110120/1295524932
+;; https://github.com/m2ym/popwin-el/blob/master/README.md
 ;; popwin
 (require 'popwin)
 (setq display-buffer-function 'popwin:display-buffer)
-;;; anything用
+;;; anything
 (setq anything-samewindow nil)
 (push '("*anything*" :height 20) popwin:special-display-config)
+;;; M-x dired-jump-other-window
+(require 'dired-x)
+(push '(dired-mode :position top) popwin:special-display-config)
+;;; grep
+(push '("*grep*" :noselect t) popwin:special-display-config)
 
 ;; GitフロントエンドEggの設定
 (when (executable-find "git")
@@ -259,7 +265,7 @@
 (defun js-indent-hook()
   (setq js-indent-level 2
 	js-expr-indent-offset 2
-	indent-tabs-mode nil)
+	indent-tas-mode nil)
   (defun my-js-indent-line ()
     (intercactive)
     (let* ((parse-status (save-excursion (syntax-ppss (point-at-bol))))
