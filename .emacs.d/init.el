@@ -176,7 +176,7 @@
  nil 'japanese-jisx0208
  (font-spec :family "Osaka"))
 
-;;; anything
+;; anything
 ;; (auto-install-batch "anything")
 (when (require 'anything nil t)
   (setq
@@ -185,6 +185,9 @@
    anything-candidate-number-limit 100
    anything-quick-update t
    anything-enable-shortcuts 'alphabet))
+
+;;; anything global keymap
+(define-key global-map(kbd "\C-x b") 'anything)
 
 (when (require 'anything-config nil t)
   (setq anything-su-or-sudo "sudo"))
