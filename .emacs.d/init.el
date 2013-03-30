@@ -331,3 +331,4 @@
 
 (add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
 (add-hook 'js2-mode-hook 'js-indent-hook)
+
