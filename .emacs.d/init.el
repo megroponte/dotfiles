@@ -15,7 +15,7 @@
 	    (normal-top-level-add-subdirs-to-load-path))))))
 
 ;; パスの設定
-(add-to-load-path "elisp" "conf" "public_repos" "info" "elisp/apel" "elisp/emu")
+(add-to-load-path "elisp" "conf" "el-get" "public_repos" "info" "elisp/apel" "elisp/emu")
 
 ;; ELPA(package.el)の設定
 (when (require 'package nil t)
@@ -23,6 +23,28 @@
 	       '("marmalade" . "http://marmalade-repo.org/packages/"))
   (add-to-list 'package-archives '("ELPA" . "http://tromey.com/elpa/"))
   (package-initialize))
+
+;; el-get
+;; http://shishithefool.blogspot.jp/2012/04/el-get-emacs.html
+(when (require 'el-get nil t)
+;(setq el-get-sources
+; 	'(
+; 	  (:name ruby-mode-trunk-head
+; 		 :type http
+; 		 :description "Major mode for editing Ruby files. (trunk-head)"
+; 		 :url "http://bugs.ruby-lang.org/projects/ruby-trunk/repository/raw/misc/ruby-mode.el")
+; 	  (:name php-mode-github
+; 		 :type github
+; 		 :website "https://github.com/ejmr/php-mode"
+; 		 :description "Major mode for editing PHP files. (on Github based on SourceForge version))"
+; 		 :pkgname "ejmr/php-mode")
+; 	  (:name multi-web-mode
+; 		 :type git
+; 		 :website "https://github.com/fgallina/multi-web-mode"
+; 		 :description "Multi Web Mode is a minor mode wich makes web editing in Emacs much easier."
+; 		 :url "git://github.com/fgallina/multi-web-mode.git")
+; 	  ))
+  (el-get 'sync))
 
 ;; auto-installの設定
 (when (require 'auto-install nil t)
@@ -229,7 +251,7 @@
 ;; auto-complete
 (when (require 'auto-complete-config nil t)
   (add-to-list 'ac-dictionary-directories
-n	       "~/.emacs.d/elisp/ac-dict")
+	       "~/.emacs.d/elisp/ac-dict")
   (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
   (ac-config-default))
 
