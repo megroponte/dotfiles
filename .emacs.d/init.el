@@ -255,6 +255,11 @@
   (ruby-block-mode t))
 (add-hook 'ruby-mode 'ruby-mode-hooks)
 
+;;; rvm
+;;; https://github.com/senny/rvm.el
+(when (require 'rvm nil t)
+  (rvm-use-default))
+
 ;;; Ruby flymake
 (require 'flymake)
 
