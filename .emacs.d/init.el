@@ -176,6 +176,23 @@
  nil 'japanese-jisx0208
  (font-spec :family "Osaka"))
 
+;; multi-term
+(when (require 'multi-term nil t)
+  (setq term-unbind-key-list '("C-x" "C-c" "<ESC>"))
+  (setq term-bind-key-alist
+	'(("C-c C-c" . term-interrupt-subjob)
+	  ("C-m" . term-send-raw)
+	  ("M-f" . term-send-forward-word)
+	  ("M-b" . term-send-backward-word)
+	  ("M-o" . term-send-backspace)
+	  ("M-p" . term-send-up)
+	  ("M-n" . term-send-down)
+	  ("M-M" . term-send-forward-kill-word)
+	  ("M-N" . term-send-backward-kill-word)
+	  ("M-r" . term-send-reverse-search-history)
+	  ("M-," . term-send-input)
+	  ("M-." . comint-dynamic-complete))))
+	   
 ;; anything
 ;; (auto-install-batch "anything")
 (when (require 'anything nil t)
@@ -212,7 +229,7 @@
 ;; auto-complete
 (when (require 'auto-complete-config nil t)
   (add-to-list 'ac-dictionary-directories
-	       "~/.emacs.d/elisp/ac-dict")
+n	       "~/.emacs.d/elisp/ac-dict")
   (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
   (ac-config-default))
 
