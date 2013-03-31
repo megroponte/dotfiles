@@ -266,6 +266,7 @@
     (define-key elscreen-map (kbd "C-z") 'suspend-emacs)))
 
 ;;; GitフロントエンドEggの設定
+;;; https://github.com/bogolisk/egg/wiki
 (when (executable-find "git")
   (require 'egg nil t))
 
