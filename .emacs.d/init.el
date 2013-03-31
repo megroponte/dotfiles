@@ -211,38 +211,47 @@
 	  ("M-," . term-send-input)
 	  ("M-." . comint-dynamic-complete))))
 
+;;; helm
+;;; https://github.com/emacs-helm/helm/wiki
+;;; http://emacs.tsutomuonoda.com/emacs-anything-el-helm-mode-install/
+(when (require 'helm-config nil t)
+  (helm-mode 1)
+  (global-set-key (kbd "C-x b") 'helm-mini)
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+)
+
 ;;; anything
 ;;; (auto-install-batch "anything")
-(when (require 'anything nil t)
-  (setq
-   anything-idle-delay 0.3
-   anything-input-idle-delay 0.2
-   anything-candidate-number-limit 100
-   anything-quick-update t
-   anything-enable-shortcuts 'alphabet))
+;(when (require 'anything nil t)
+;  (setq
+;   anything-idle-delay 0.3
+;   anything-input-idle-delay 0.2
+;   anything-candidate-number-limit 100
+;   anything-quick-update t
+;   anything-enable-shortcuts 'alphabet))
 
 ;; anything global keymap
-(define-key global-map(kbd "\C-x b") 'anything)
+;(define-key global-map(kbd "\C-x b") 'anything)
 
-(when (require 'anything-config nil t)
-  (setq anything-su-or-sudo "sudo"))
+;(when (require 'anything-config nil t)
+;  (setq anything-su-or-sudo "sudo"))
 
-(require 'anything-match-plugin nil t)
+;(require 'anything-match-plugin nil t)
 
-(when (and (executable-find "cmigemo")
-	   (require 'migemo nil t))
-  (require 'anything-migemo nil t))
+;(when (and (executable-find "cmigemo")
+; 	   (require 'migemo nil t))
+;  (require 'anything-migemo nil t))
 
-(when (require 'anything-complete nil t)
-  (anything-lisp-complete-symbol-set-timer 150))
+;(when (require 'anything-complete nil t)
+;  (anything-lisp-complete-symbol-set-timer 150))
 
-(require 'anything-show-completion nil t)
-
-(when (require 'auto-install nil t)
-  (require 'anything-auto-install nil t))
-
-(when (require 'descbinds-anything nil t)
-  (descbinds-anything-install))
+;(require 'anything-show-completion nil t)
+; 
+;(when (require 'auto-install nil t)
+;  (require 'anything-auto-install nil t))
+; 
+;(when (require 'descbinds-anything nil t)
+;  (descbinds-anything-install))
 
 ;;; auto-complete
 (when (require 'auto-complete-config nil t)
@@ -268,8 +277,8 @@
 (require 'popwin)
 (setq display-buffer-function 'popwin:display-buffer)
 ;; anything
-(setq anything-samewindow nil)
-(push '("*anything*" :height 20) popwin:special-display-config)
+;(setq anything-samewindow nil)
+;(push '("*anything*" :height 20) popwin:special-display-config)
 ;; M-x dired-jump-other-window
 (require 'dired-x)
 (push '(dired-mode :position top) popwin:special-display-config)
@@ -283,6 +292,9 @@
 (push '(egg-diff-buffer-mode :position bottom :height 20) popwin:special-display-config)
 (push '(egg-commit-buffer-mode :position bottom :height 20) popwin:special-display-config)
 (push '("*vc-change-log*" :position bottom :height 20) popwin:special-display-config)
+;; helm
+(setq helm-samewindow nil)
+(push '("*helm-mini*" :height 20) popwin:special-display-config)
 
 ;;; Ruby
 (require 'ruby-electric nil t)
