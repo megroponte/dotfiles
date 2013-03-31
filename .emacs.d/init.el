@@ -217,7 +217,7 @@
 (when (require 'helm-config nil t)
   (helm-mode 1)
   (global-set-key (kbd "C-x b") 'helm-mini)
-  (global-set-key (kbd "C-x C-f" 'helm-find-files)
+;  (global-set-key (kbd "C-x C-f") 'helm-find-files)
 )
 
 ;;; auto-complete
@@ -238,9 +238,9 @@
 (when (executable-find "git")
   (require 'egg nil t))
 
+;;; popwin
 ;;; http://d.hatena.ne.jp/m2ym/20110120/1295524932
 ;;; https://github.com/m2ym/popwin-el/blob/master/README.md
-;;; popwin
 (require 'popwin)
 (setq display-buffer-function 'popwin:display-buffer)
 ;; M-x dired-jump-other-window
