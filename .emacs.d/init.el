@@ -265,6 +265,10 @@
       (define-key elscreen-map (kbd "C-z") 'iconify-or-deiconify-frame)
     (define-key elscreen-map (kbd "C-z") 'suspend-emacs)))
 
+;;; GitフロントエンドEggの設定
+(when (executable-find "git")
+  (require 'egg nil t))
+
 ;;; http://d.hatena.ne.jp/m2ym/20110120/1295524932
 ;;; https://github.com/m2ym/popwin-el/blob/master/README.md
 ;;; popwin
@@ -278,11 +282,14 @@
 (push '(dired-mode :position top) popwin:special-display-config)
 ;; grep
 (push '("*grep*" :noselect t) popwin:special-display-config)
-
-;;; GitフロントエンドEggの設定
-(when (executable-find "git")
-  (require 'egg nil t)
-)
+;; egg
+(push '(egg-status-buffer-mode :position bottom :height 20) popwin:special-display-config)
+(push '(egg-log-buffer-mode :position bottom :height 20) popwin:special-display-config)
+(push '(egg-file-log-buffer-mode :position bottom :height 20) popwin:special-display-config)
+(push '(egg-reflog-buffer-mode :position bottom :height 20) popwin:special-display-config)
+(push '(egg-diff-buffer-mode :position bottom :height 20) popwin:special-display-config)
+(push '(egg-commit-buffer-mode :position bottom :height 20) popwin:special-display-config)
+(push '("*vc-change-log*" :position bottom :height 20) popwin:special-display-config)
 
 ;;; Ruby
 (require 'ruby-electric nil t)
