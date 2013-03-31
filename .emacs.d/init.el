@@ -15,7 +15,7 @@
 	    (normal-top-level-add-subdirs-to-load-path))))))
 
 ;;; パスの設定
-(add-to-load-path "elisp" "conf" "el-get" "public_repos" "info" "elisp/apel" "elisp/emu")
+(add-to-load-path "conf" "el-get" "elisp" "public_repos" "info" "elisp/apel" "elisp/emu")
 
 ;;; ELPA(package.el)の設定
 (when (require 'package nil t)
@@ -210,14 +210,6 @@
 	  ("M-r" . term-send-reverse-search-history)
 	  ("M-," . term-send-input)
 	  ("M-." . comint-dynamic-complete))))
-
-;;; wanderlust
-;;; http://tatsuaki-k.blogspot.jp/2010/11/carbon-emacs-wanderlust-imap-gmail.html
-;;; need gnutls(installed by homebrew)
-(setq ssl-certificate-verification-policy 1)
-(autoload 'wl "wl" "Wanderlust" t)
-(autoload 'wl-other-frame "wl" "Wanderlust on new frame." t)
-(autoload 'wl-draft "wl-draft" "Write draft with Wanderlust." t)
 
 ;;; anything
 ;;; (auto-install-batch "anything")
