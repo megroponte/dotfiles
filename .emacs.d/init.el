@@ -1,5 +1,5 @@
 ;;; デバッグ用(nil or 1)
-(setq debug-on-error 1)
+(setq debug-on-error nil)
 
 (when (> emacs-major-version 23)
   (defvar user-emacs-directory "~/.emacs.d"))
@@ -22,6 +22,7 @@
   (add-to-list 'package-archives
 	       '("marmalade" . "http://marmalade-repo.org/packages/"))
   (add-to-list 'package-archives '("ELPA" . "http://tromey.com/elpa/"))
+  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages"))
   (package-initialize))
 
 ;;; el-get
@@ -204,27 +205,35 @@
 (define-key function-key-map [134217893] [?\M-\\])
 (define-key function-key-map [201326757] [?\C-\M-\\])
 
-;;; 日本語フォントをOsakaに
-(set-fontset-font
- nil 'japanese-jisx0208
- (font-spec :family "Osaka"))
+;(set-face-attribute 'default nil
+; :family "Menlo"
+; :height 200)
+; 
+;;;; 日本語フォントをヒラギノ明朝に
+;(set-fontset-font
+;  (frame-parameter nil 'font)
+;  'japanese-jisx0208
+;  '("Hiragino Kaku Gothic ProN" . "iso-10646-1"))
+; 
+;(setq face-font-rescale-alist
+; '(("^-apple-hiragino.*" . 1.2)))
 
 ;;; multi-term
-(when (require 'multi-term nil t)
-  (setq term-unbind-key-list '("C-x" "C-c" "<ESC>"))
-  (setq term-bind-key-alist
-	'(("C-c C-c" . term-interrupt-subjob)
-	  ("C-m" . term-send-raw)
-	  ("M-f" . term-send-forward-word)
-	  ("M-b" . term-send-backward-word)
-	  ("M-o" . term-send-backspace)
-	  ("M-p" . term-send-up)
-	  ("M-n" . term-send-down)
-	  ("M-M" . term-send-forward-kill-word)
-	  ("M-N" . term-send-backward-kill-word)
-	  ("M-r" . term-send-reverse-search-history)
-	  ("M-," . term-send-input)
-	  ("M-." . comint-dynamic-complete))))
+;(when (require 'multi-term nil t)
+;  (setq term-unbind-key-list '("C-x" "C-c" "<ESC>"))
+;  (setq term-bind-key-alist
+; 	'(("C-c C-c" . term-interrupt-subjob)
+; 	  ("C-m" . term-send-raw)
+; 	  ("M-f" . term-send-forward-word)
+; 	  ("M-b" . term-send-backward-word)
+; 	  ("M-o" . term-send-backspace)
+; 	  ("M-p" . term-send-up)
+; 	  ("M-n" . term-send-down)
+; 	  ("M-M" . term-send-forward-kill-word)
+; 	  ("M-N" . term-send-backward-kill-word)
+; 	  ("M-r" . term-send-reverse-search-history)
+; 	  ("M-," . term-send-input)
+; 	  ("M-." . comint-dynamic-complete))))
 
 ;;; helm
 ;;; https://github.com/emacs-helm/helm/wiki
@@ -243,10 +252,10 @@
   (ac-config-default))
 
 ;;; elscreenの設定
-(when (require 'elscreen nil t)
-  (if window-system
-      (define-key elscreen-map (kbd "C-z") 'iconify-or-deiconify-frame)
-    (define-key elscreen-map (kbd "C-z") 'suspend-emacs)))
+;(when (require 'elscreen nil t)
+;  (if window-system
+;      (define-key elscreen-map (kbd "C-z") 'iconify-or-deiconify-frame)
+;    (define-key elscreen-map (kbd "C-z") 'suspend-emacs)))
 
 ;;; GitフロントエンドEggの設定
 ;;; https://github.com/bogolisk/egg/wiki
@@ -274,6 +283,15 @@
 ;; helm
 (setq helm-samewindow nil)
 (push '("*helm-mini*" :height 20) popwin:special-display-config)
+
+;;; popup-select-window
+(global-set-key "\C-\o" 'popup-select-window)
+(setq popup-select-window-popup-windows 2)
+(setq popup-select-window-window-highlight-face '(:foreground "white" :background "orange"))
+
+;;; quickrun
+;;; https://github.com/syohex/emacs-quickrun
+(require 'quickrun)
 
 ;;; Ruby
 (require 'ruby-electric nil t)
