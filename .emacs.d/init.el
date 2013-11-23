@@ -1,5 +1,5 @@
 ;;; デバッグ用(nil or 1)
-(setq debug-on-error nil)
+(setq debug-on-error 1)
 
 (when (> emacs-major-version 23)
   (defvar user-emacs-directory "~/.emacs.d"))
@@ -80,7 +80,7 @@
 (global-linum-mode t)
 
 ;;; バッテリー残量表示
-(display-battery-mode t)
+;(display-battery-mode t)
 
 ;;; タイトルバーにファイルのフルパスを表示
 (setq frame-title-format "%f")
