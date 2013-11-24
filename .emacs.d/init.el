@@ -140,6 +140,9 @@
 ;;; C-h でカーソルの左にある文字を消す
 (define-key global-map "\C-h" 'delete-backward-char)
 
+;;; minibuffer 内で、C-k で行ごと消す
+(define-key minibuffer-local-map (kbd "C-k") 'kill-whole-line)
+
 ;;; C-h に割り当てられている関数 help-command を C-x C-h に割り当てる
 (define-key global-map "\C-x\C-h" 'help-command)
 
