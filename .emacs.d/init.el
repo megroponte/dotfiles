@@ -288,9 +288,9 @@
 (push '("*helm-mini*" :height 20) popwin:special-display-config)
 
 ;;; popup-select-window
-(global-set-key "\C-\o" 'popup-select-window)
-(setq popup-select-window-popup-windows 2)
-(setq popup-select-window-window-highlight-face '(:foreground "white" :background "orange"))
+;(global-set-key "\C-\o" 'popup-select-window)
+;(setq popup-select-window-popup-windows 2)
+;(setq popup-select-window-window-highlight-face '(:foreground "white" :background "orange"))
 
 ;;; quickrun
 ;;; https://github.com/syohex/emacs-quickrun
