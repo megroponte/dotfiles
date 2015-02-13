@@ -160,26 +160,26 @@
 
 ;;; 日本語・英語混じり文での区切判定
 ;;; http://www.alles.or.jp/~torutk/oojava/meadow/Meadow210Install.html
-(defadvice dabbrev-expand
-  (around modify-regexp-for-japanese activate compile)
-  "Modify `dabbrev-abbrev-char-regexp' dynamically for Japanese words."
-  (if (bobp)
-      ad-do-it
-    (let ((dabbrev-abbrev-char-regexp
-           (let ((c (char-category-set (char-before))))
-             (cond 
-              ((aref c ?a) "[-_A-Za-z0-9]") ; ASCII
-              ((aref c ?j) ; Japanese
-               (cond
-                ((aref c ?K) "\\cK") ; katakana
-                ((aref c ?A) "\\cA") ; 2byte alphanumeric
-                ((aref c ?H) "\\cH") ; hiragana
-                ((aref c ?C) "\\cC") ; kanji
-                (t "\\cj")))
-              ((aref c ?k) "\\ck") ; hankaku-kana
-              ((aref c ?r) "\\cr") ; Japanese roman ?
-              (t dabbrev-abbrev-char-regexp)))))
-      ad-do-it)))
+;(defadvice dabbrev-expand
+;  (around modify-regexp-for-japanese activate compile)
+;  "Modify `dabbrev-abbrev-char-regexp' dynamically for Japanese words."
+;  (if (bobp)
+;      ad-do-it
+;    (let ((dabbrev-abbrev-char-regexp
+;           (let ((c (char-category-set (char-before))))
+;             (cond 
+;              ((aref c ?a) "[-_A-Za-z0-9]") ; ASCII
+;              ((aref c ?j) ; Japanese
+;               (cond
+;                ((aref c ?K) "\\cK") ; katakana
+;                ((aref c ?A) "\\cA") ; 2byte alphanumeric
+;                ((aref c ?H) "\\cH") ; hiragana
+;                ((aref c ?C) "\\cC") ; kanji
+;                (t "\\cj")))
+;              ((aref c ?k) "\\ck") ; hankaku-kana
+;              ((aref c ?r) "\\cr") ; Japanese roman ?
+;              (t dabbrev-abbrev-char-regexp)))))
+;      ad-do-it)))
 
 ;;; BS で選択範囲を消す
 (delete-selection-mode 1)
