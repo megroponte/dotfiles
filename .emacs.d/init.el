@@ -1,8 +1,9 @@
 ;;; デバッグ用(nil or 1)
 (setq debug-on-error nil)
 
-(when (> emacs-major-version 23)
-  (defvar user-emacs-directory "~/.emacs.d"))
+;;いらないと思う
+;(when (> emacs-major-version 23)
+;  (defvar user-emacs-directory "~/.emacs.d"))
 
 ;;; パスを設定する関数
 (defun add-to-load-path (&rest paths)
@@ -118,9 +119,6 @@
 ;;; バッファ末尾に余計な改行コードを防ぐための設定
 (setq next-line-add-newlines nil) 
 
-;;; C-x l で goto-line を実行
-(define-key ctl-x-map "l" 'goto-line) 
-
 ;;; 時間を表示
 (display-time) 
 
@@ -137,22 +135,10 @@
 ;;; カレントウィンドウの透明度を変更する
 (set-frame-parameter nil 'alpha 85)
 
-;;; C-h でカーソルの左にある文字を消す
-(define-key global-map "\C-h" 'delete-backward-char)
-
-;;; minibuffer 内で、C-k で行ごと消す
-(define-key minibuffer-local-map (kbd "C-k") 'kill-whole-line)
-
-;;; C-h に割り当てられている関数 help-command を C-x C-h に割り当てる
-(define-key global-map "\C-x\C-h" 'help-command)
-
 ;;; C-o に動的略語展開機能を割り当てる
 (define-key global-map "\C-o" 'dabbrev-expand)
 (setq dabbrev-case-fold-search nil) ; 大文字小文字を区別 
-
-;;; OptionキーをMetaキーとしてつかう
-;;; http://homepage.mac.com/zenitani/emacs-j.html
-(setq mac-option-modifier 'meta)
+;;dabbrev-jaというパッケージがあるようだ
 
 ;;;http://3daimenushi.blog112.fc2.com/blog-entry-126.html
 ;;;スタートメッセージを表示しない
@@ -160,26 +146,26 @@
 
 ;;; 日本語・英語混じり文での区切判定
 ;;; http://www.alles.or.jp/~torutk/oojava/meadow/Meadow210Install.html
-(defadvice dabbrev-expand
-  (around modify-regexp-for-japanese activate compile)
-  "Modify `dabbrev-abbrev-char-regexp' dynamically for Japanese words."
-  (if (bobp)
-      ad-do-it
-    (let ((dabbrev-abbrev-char-regexp
-           (let ((c (char-category-set (char-before))))
-             (cond 
-              ((aref c ?a) "[-_A-Za-z0-9]") ; ASCII
-              ((aref c ?j) ; Japanese
-               (cond
-                ((aref c ?K) "\\cK") ; katakana
-                ((aref c ?A) "\\cA") ; 2byte alphanumeric
-                ((aref c ?H) "\\cH") ; hiragana
-                ((aref c ?C) "\\cC") ; kanji
-                (t "\\cj")))
-              ((aref c ?k) "\\ck") ; hankaku-kana
-              ((aref c ?r) "\\cr") ; Japanese roman ?
-              (t dabbrev-abbrev-char-regexp)))))
-      ad-do-it)))
+;(defadvice dabbrev-expand
+;  (around modify-regexp-for-japanese activate compile)
+;  "Modify `dabbrev-abbrev-char-regexp' dynamically for Japanese words."
+;  (if (bobp)
+;      ad-do-it
+;    (let ((dabbrev-abbrev-char-regexp
+;           (let ((c (char-category-set (char-before))))
+;             (cond 
+;              ((aref c ?a) "[-_A-Za-z0-9]") ; ASCII
+;              ((aref c ?j) ; Japanese
+;               (cond
+;                ((aref c ?K) "\\cK") ; katakana
+;                ((aref c ?A) "\\cA") ; 2byte alphanumeric
+;                ((aref c ?H) "\\cH") ; hiragana
+;                ((aref c ?C) "\\cC") ; kanji
+;                (t "\\cj")))
+;              ((aref c ?k) "\\ck") ; hankaku-kana
+;              ((aref c ?r) "\\cr") ; Japanese roman ?
+;              (t dabbrev-abbrev-char-regexp)))))
+;      ad-do-it)))
 
 ;;; BS で選択範囲を消す
 (delete-selection-mode 1)
@@ -191,14 +177,8 @@
 ;;; http://0xcc.net/blog/archives/000041.html
 (set-default-coding-systems 'utf-8)
 
-;;; "C-t" でウィンドウを切り替える。初期値はtranspose-chars
-(define-key global-map (kbd "C-t") 'other-window)
-
-;;; "C-m"で改行とインデントを行う
-(global-set-key (kbd "C-m") 'newline-and-indent)
-
-;;; キーボードのキー設定
-;;; http://cgi.netlaputa.ne.jp/~kose/diary/?20090806
+;;; キーボードのキー設定 for MacOS X
+(setq mac-option-modifier 'meta) ; OptionキーをMetaキーとしてつかう
 (define-key global-map [165] nil)
 (define-key global-map [67109029] nil)
 (define-key global-map [134217893] nil)
@@ -207,6 +187,24 @@
 (define-key function-key-map [67109029] [?\C-\\])
 (define-key function-key-map [134217893] [?\M-\\])
 (define-key function-key-map [201326757] [?\C-\M-\\])
+
+;;; C-h でカーソルの左にある文字を消す
+(define-key global-map "\C-h" 'delete-backward-char)
+
+;;; minibuffer 内で、C-k で行ごと消す
+(define-key minibuffer-local-map (kbd "C-k") 'kill-whole-line)
+
+;;; C-h に割り当てられている関数 help-command を C-x C-h に割り当てる
+(define-key global-map "\C-x\C-h" 'help-command)
+
+;;; "C-t" でウィンドウを切り替える。初期値はtranspose-chars
+(define-key global-map (kbd "C-t") 'other-window)
+
+;;; "C-m"で改行とインデントを行う
+(global-set-key (kbd "C-m") 'newline-and-indent)
+
+;;; C-x l で goto-line を実行
+(define-key ctl-x-map "l" 'goto-line) 
 
 ;(set-face-attribute 'default nil
 ; :family "Menlo"
@@ -262,8 +260,8 @@
 
 ;;; GitフロントエンドEggの設定
 ;;; https://github.com/bogolisk/egg/wiki
-(when (executable-find "git")
-  (require 'egg nil t))
+;(when (executable-find "git")
+;  (require 'egg nil t))
 
 ;;; popwin
 ;;; http://d.hatena.ne.jp/m2ym/20110120/1295524932
@@ -276,13 +274,13 @@
 ;; grep
 (push '("*grep*" :noselect t) popwin:special-display-config)
 ;; egg
-(push '(egg-status-buffer-mode :position bottom :height 20) popwin:special-display-config)
-(push '(egg-log-buffer-mode :position bottom :height 20) popwin:special-display-config)
-(push '(egg-file-log-buffer-mode :position bottom :height 20) popwin:special-display-config)
-(push '(egg-reflog-buffer-mode :position bottom :height 20) popwin:special-display-config)
-(push '(egg-diff-buffer-mode :position bottom :height 20) popwin:special-display-config)
-(push '(egg-commit-buffer-mode :position bottom :height 20) popwin:special-display-config)
-(push '("*vc-change-log*" :position bottom :height 20) popwin:special-display-config)
+;(push '(egg-status-buffer-mode :position bottom :height 20) popwin:special-display-config)
+;(push '(egg-log-buffer-mode :position bottom :height 20) popwin:special-display-config)
+;(push '(egg-file-log-buffer-mode :position bottom :height 20) popwin:special-display-config)
+;(push '(egg-reflog-buffer-mode :position bottom :height 20) popwin:special-display-config)
+;(push '(egg-diff-buffer-mode :position bottom :height 20) popwin:special-display-config)
+;(push '(egg-commit-buffer-mode :position bottom :height 20) popwin:special-display-config)
+;(push '("*vc-change-log*" :position bottom :height 20) popwin:special-display-config)
 ;; helm
 (setq helm-samewindow nil)
 (push '("*helm-mini*" :height 20) popwin:special-display-config)
