@@ -1,59 +1,6 @@
 ;;; デバッグ用(nil or 1)
 (setq debug-on-error nil)
 
-;;いらないと思う
-;(when (> emacs-major-version 23)
-;  (defvar user-emacs-directory "~/.emacs.d"))
-
-;;; パスを設定する関数
-(defun add-to-load-path (&rest paths)
-  (let (path)
-    (dolist (path paths paths)
-      (let ((default-directory
-	      (expand-file-name (concat user-emacs-directory path))))
-	(add-to-list 'load-path default-directory)
-	(if (fboundp 'normal-top-level-add-subdirs-to-load-path)
-	    (normal-top-level-add-subdirs-to-load-path))))))
-
-;;; パスの設定
-(add-to-load-path "conf" "el-get" "elisp" "public_repos" "info" "elisp/apel" "elisp/emu")
-
-;;; ELPA(package.el)の設定
-(when (require 'package nil t)
-  (add-to-list 'package-archives
-	       '("marmalade" . "http://marmalade-repo.org/packages/"))
-  (add-to-list 'package-archives '("ELPA" . "http://tromey.com/elpa/"))
-  (add-to-list 'package-archives '("melpa" . "http://melpa.milkbox.net/packages"))
-  (package-initialize))
-
-;;; el-get
-;;; http://shishithefool.blogspot.jp/2012/04/el-get-emacs.html
-(when (require 'el-get nil t)
-;(setq el-get-sources
-; 	'(
-; 	  (:name ruby-mode-trunk-head
-; 		 :type http
-; 		 :description "Major mode for editing Ruby files. (trunk-head)"
-; 		 :url "http://bugs.ruby-lang.org/projects/ruby-trunk/repository/raw/misc/ruby-mode.el")
-; 	  (:name php-mode-github
-; 		 :type github
-; 		 :website "https://github.com/ejmr/php-mode"
-; 		 :description "Major mode for editing PHP files. (on Github based on SourceForge version))"
-; 		 :pkgname "ejmr/php-mode")
-; 	  (:name multi-web-mode
-; 		 :type git
-; 		 :website "https://github.com/fgallina/multi-web-mode"
-; 		 :description "Multi Web Mode is a minor mode wich makes web editing in Emacs much easier."
-; 		 :url "git://github.com/fgallina/multi-web-mode.git")
-; 	  ))
-  (el-get 'sync))
-
-;;; auto-installの設定
-(when (require 'auto-install nil t)
-  (setq auto-install-directory "~/.emacs.d/elisp")
-  (auto-install-update-emacswiki-package-name t)
-  (auto-install-compatibility-setup))
-
 ;;; 全角スペース/タブ文字可視化
 (setq whitespace-style
       '(tabs tab-mark spaces space-mark))
@@ -89,10 +36,6 @@
 
 ;;; yesと入力するのは面倒なのでyで十分
 (defalias 'yes-or-no-p 'y-or-n-p)
-
-;;; ツールバーとスクロールバーを消す
-;;(tool-bar-mode -1)
-;;(scroll-bar-mode -1)
 
 ;;; 日本語設定 (UTF-8)
 (set-language-environment "Japanese")
@@ -140,32 +83,8 @@
 (setq dabbrev-case-fold-search nil) ; 大文字小文字を区別 
 ;;dabbrev-jaというパッケージがあるようだ
 
-;;;http://3daimenushi.blog112.fc2.com/blog-entry-126.html
 ;;;スタートメッセージを表示しない
 (setq inhibit-startup-message t)
-
-;;; 日本語・英語混じり文での区切判定
-;;; http://www.alles.or.jp/~torutk/oojava/meadow/Meadow210Install.html
-;(defadvice dabbrev-expand
-;  (around modify-regexp-for-japanese activate compile)
-;  "Modify `dabbrev-abbrev-char-regexp' dynamically for Japanese words."
-;  (if (bobp)
-;      ad-do-it
-;    (let ((dabbrev-abbrev-char-regexp
-;           (let ((c (char-category-set (char-before))))
-;             (cond 
-;              ((aref c ?a) "[-_A-Za-z0-9]") ; ASCII
-;              ((aref c ?j) ; Japanese
-;               (cond
-;                ((aref c ?K) "\\cK") ; katakana
-;                ((aref c ?A) "\\cA") ; 2byte alphanumeric
-;                ((aref c ?H) "\\cH") ; hiragana
-;                ((aref c ?C) "\\cC") ; kanji
-;                (t "\\cj")))
-;              ((aref c ?k) "\\ck") ; hankaku-kana
-;              ((aref c ?r) "\\cr") ; Japanese roman ?
-;              (t dabbrev-abbrev-char-regexp)))))
-;      ad-do-it)))
 
 ;;; BS で選択範囲を消す
 (delete-selection-mode 1)
@@ -206,36 +125,6 @@
 ;;; C-x l で goto-line を実行
 (define-key ctl-x-map "l" 'goto-line) 
 
-;(set-face-attribute 'default nil
-; :family "Menlo"
-; :height 200)
-; 
-;;;; 日本語フォントをヒラギノ明朝に
-;(set-fontset-font
-;  (frame-parameter nil 'font)
-;  'japanese-jisx0208
-;  '("Hiragino Kaku Gothic ProN" . "iso-10646-1"))
-; 
-;(setq face-font-rescale-alist
-; '(("^-apple-hiragino.*" . 1.2)))
-
-;;; multi-term
-;(when (require 'multi-term nil t)
-;  (setq term-unbind-key-list '("C-x" "C-c" "<ESC>"))
-;  (setq term-bind-key-alist
-; 	'(("C-c C-c" . term-interrupt-subjob)
-; 	  ("C-m" . term-send-raw)
-; 	  ("M-f" . term-send-forward-word)
-; 	  ("M-b" . term-send-backward-word)
-; 	  ("M-o" . term-send-backspace)
-; 	  ("M-p" . term-send-up)
-; 	  ("M-n" . term-send-down)
-; 	  ("M-M" . term-send-forward-kill-word)
-; 	  ("M-N" . term-send-backward-kill-word)
-; 	  ("M-r" . term-send-reverse-search-history)
-; 	  ("M-," . term-send-input)
-; 	  ("M-." . comint-dynamic-complete))))
-
 ;;; helm
 ;;; https://github.com/emacs-helm/helm/wiki
 ;;; http://emacs.tsutomuonoda.com/emacs-anything-el-helm-mode-install/
@@ -252,17 +141,6 @@
   (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
   (ac-config-default))
 
-;;; elscreenの設定
-;(when (require 'elscreen nil t)
-;  (if window-system
-;      (define-key elscreen-map (kbd "C-z") 'iconify-or-deiconify-frame)
-;    (define-key elscreen-map (kbd "C-z") 'suspend-emacs)))
-
-;;; GitフロントエンドEggの設定
-;;; https://github.com/bogolisk/egg/wiki
-;(when (executable-find "git")
-;  (require 'egg nil t))
-
 ;;; popwin
 ;;; http://d.hatena.ne.jp/m2ym/20110120/1295524932
 ;;; https://github.com/m2ym/popwin-el/blob/master/README.md
@@ -273,83 +151,11 @@
 (push '(dired-mode :position top) popwin:special-display-config)
 ;; grep
 (push '("*grep*" :noselect t) popwin:special-display-config)
-;; egg
-;(push '(egg-status-buffer-mode :position bottom :height 20) popwin:special-display-config)
-;(push '(egg-log-buffer-mode :position bottom :height 20) popwin:special-display-config)
-;(push '(egg-file-log-buffer-mode :position bottom :height 20) popwin:special-display-config)
-;(push '(egg-reflog-buffer-mode :position bottom :height 20) popwin:special-display-config)
-;(push '(egg-diff-buffer-mode :position bottom :height 20) popwin:special-display-config)
-;(push '(egg-commit-buffer-mode :position bottom :height 20) popwin:special-display-config)
-;(push '("*vc-change-log*" :position bottom :height 20) popwin:special-display-config)
 ;; helm
 (setq helm-samewindow nil)
 (push '("*helm-mini*" :height 20) popwin:special-display-config)
-
-;;; popup-select-window
-;(global-set-key "\C-\o" 'popup-select-window)
-;(setq popup-select-window-popup-windows 2)
-;(setq popup-select-window-window-highlight-face '(:foreground "white" :background "orange"))
 
 ;;; quickrun
 ;;; https://github.com/syohex/emacs-quickrun
 (require 'quickrun)
 
-;;; Haskell
-(autoload 'haskell-mode "haskell-mode")
-;(autoload 'haskell-cabal "haskell-cabal")
-(add-to-list 'auto-mode-alist '("\\.hs$" . haskell-mode))
-(add-to-list 'interpreter-mode-alist '("runghc" . haskell-mode))
-(add-to-list 'interpreter-mode-alist '("runhaskell" . haskell-mode))
-(setq haskell-program-name "/usr/bin/ghci")
-
-;;; Ruby
-(require 'ruby-electric nil t)
-(when (require 'ruby-block nil t)
-  (setq ruby-block-heighlight-toggle t))
-(autoload 'run-ruby "inf-ruby"
-  "Run as inferior Ruby process")
-(autoload 'inf-ruby-keys "inf-ruby"
-  "Set local key defs for inf-ruby in ruby-mode")
-
-(defun ruby-mode-hooks ()
-  (inf-ruby-keys)
-  (ruby-electric-mode t)
-  (ruby-block-mode t))
-(add-hook 'ruby-mode 'ruby-mode-hooks)
-
-;;; rvm
-;;; https://github.com/senny/rvm.el
-(when (require 'rvm nil t)
-  (rvm-use-default))
-
-;;; Ruby flymake
-(when (require 'flymake nil t)
-  (defun flymake-ruby-init ()
-    (list "ruby" (list "-c" (flymake-init-create-temp-buffer-copy
-			     'flymake-create-temp-inplace))))
-
-  (add-to-list 'flymake-allowed-file-name-masks
-	       '("\\.rb\\'" flymake-ruby-init))
-  (add-to-list 'flymake-err-line-patterns
-	       '(\\"(.*\\):(\\([0-9]+\\)): \\(.*\\)" 1 2 nil 3)))
-
-;;; javascript
-(defun js-indent-hook()
-  (setq js-indent-level 2
-	js-expr-indent-offset 2
-	indent-tabs-mode nil)
-  (defun my-js-indent-line ()
-    (intercactive)
-    (let* ((parse-status (save-excursion (syntax-ppss (point-at-bol))))
-	   (offset (- (current-column) (current-identation)))
-	   (indentation (js--proper-indentation parse-status)))
-      (back-to-indentation)
-      (if (looking-at "case\\s-")
-	  (indeint-line-to (+ indentation 2))
-	(js-indent-line))
-      (when (> offset 0) (forward-char offset))))
-  (set (make-level-variable 'indent-line-function) 'my-js-indent-line)
-  )
-
-(add-to-list 'auto-mode-alist '("\\.js$" . js-mode))
-(add-hook 'js2-mode-hook 'js-indent-hook)
