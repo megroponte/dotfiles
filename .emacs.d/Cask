@@ -1,0 +1,11 @@
+(source gnu)
+(source melpa)
+(source marmalade)
+
+(depends-on "popwin")
+(depends-on "flycheck")
+(depends-on "recentf-ext")
+(depends-on "auto-complete")
+(depends-on "ac-dabbrev")
+(depends-on "helm")
+(depends-on "quickrun")
