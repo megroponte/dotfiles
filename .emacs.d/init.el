@@ -90,8 +90,8 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;;; ツールバーとスクロールバーを消す
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
+;;(tool-bar-mode -1)
+;;(scroll-bar-mode -1)
 
 ;;; 日本語設定 (UTF-8)
 (set-language-environment "Japanese")
@@ -295,6 +295,14 @@
 ;;; quickrun
 ;;; https://github.com/syohex/emacs-quickrun
 (require 'quickrun)
+
+;;; Haskell
+(autoload 'haskell-mode "haskell-mode")
+;(autoload 'haskell-cabal "haskell-cabal")
+(add-to-list 'auto-mode-alist '("\\.hs$" . haskell-mode))
+(add-to-list 'interpreter-mode-alist '("runghc" . haskell-mode))
+(add-to-list 'interpreter-mode-alist '("runhaskell" . haskell-mode))
+(setq haskell-program-name "/usr/bin/ghci")
 
 ;;; Ruby
 (require 'ruby-electric nil t)
