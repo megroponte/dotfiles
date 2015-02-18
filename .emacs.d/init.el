@@ -163,7 +163,8 @@
 (require 'quickrun)
 
 ;;; yasunippet
-;(add-to-list 'load-path
+;;; http://fukuyama.co/yasnippet
+					;(add-to-list 'load-path
 ;	     (expand-file-name "~/.emacs.d/elisp/yasnippet"))
 (require 'yasnippet)
 (setq yas-snippet-dirs
