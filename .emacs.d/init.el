@@ -164,8 +164,7 @@
 
 ;;; yasunippet
 ;;; http://fukuyama.co/yasnippet
-					;(add-to-list 'load-path
-;	     (expand-file-name "~/.emacs.d/elisp/yasnippet"))
+;(add-to-list 'load-path (expand-file-name "~/.emacs.d/elisp/yasnippet"))
 (require 'yasnippet)
 (setq yas-snippet-dirs
       '("~/.emacs.d/snippets"))
