@@ -9,3 +9,4 @@
 (depends-on "ac-dabbrev")
 (depends-on "helm")
 (depends-on "quickrun")
+(depends-on "yasnippet")

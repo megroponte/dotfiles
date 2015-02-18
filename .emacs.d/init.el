@@ -1,5 +1,8 @@
 ;;; デバッグ用(nil or 1)
-(setq debug-on-error nil)
+(setq debug-on-error 1)
+
+(require 'cask "/usr/local/Cellar/cask/0.7.2/cask.el")
+(cask-initialize)
 
 ;;; 全角スペース/タブ文字可視化
 (setq whitespace-style
@@ -78,11 +81,6 @@
 ;;; カレントウィンドウの透明度を変更する
 (set-frame-parameter nil 'alpha 85)
 
-;;; C-o に動的略語展開機能を割り当てる
-(define-key global-map "\C-o" 'dabbrev-expand)
-(setq dabbrev-case-fold-search nil) ; 大文字小文字を区別 
-;;dabbrev-jaというパッケージがあるようだ
-
 ;;;スタートメッセージを表示しない
 (setq inhibit-startup-message t)
 
@@ -136,10 +134,15 @@
 
 ;;; auto-complete
 (when (require 'auto-complete-config nil t)
-  (add-to-list 'ac-dictionary-directories
-	       "~/.emacs.d/elisp/ac-dict")
+  (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
   (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
   (ac-config-default))
+
+;;; ac-dabbrev
+(defun ac-dabbrev-expand ()
+  (interactive)
+  (auto-complete '(ac-source-dabbrev)))
+(global-set-key "\M-/" 'ac-dabbrev-expand)
 
 ;;; popwin
 ;;; http://d.hatena.ne.jp/m2ym/20110120/1295524932
@@ -158,4 +161,19 @@
 ;;; quickrun
 ;;; https://github.com/syohex/emacs-quickrun
 (require 'quickrun)
+
+;;; yasunippet
+;(add-to-list 'load-path
+;	     (expand-file-name "~/.emacs.d/elisp/yasnippet"))
+(require 'yasnippet)
+(setq yas-snippet-dirs
+      '("~/.emacs.d/snippets"))
+(yas-global-mode 1)
+
+(custom-set-variables '(yas-trigger-key "TAB"))
+
+(define-key yas-minor-mode-map (kbd "C-x i i") 'yas-insert-snippet)
+(define-key yas-minor-mode-map (kbd "C-x i n") 'yas-new-snippet)
+(define-key yas-minor-mode-map (kbd "C-x i v") 'yas-visit-snippet-file)
+
 
