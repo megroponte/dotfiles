@@ -71,6 +71,7 @@
 ;;; cua-modeの設定(短形編集)
 (cua-mode t)
 (setq cua-enable-cua-keys nil)
+(define-key global-map (kbd "C-x SPC") 'cua-set-rectangle-mark)
 
 ;;; デフォルトの透明度を設定する
 (add-to-list 'default-frame-alist '(alpha . 85))
@@ -176,4 +177,17 @@
 (define-key yas-minor-mode-map (kbd "C-x i n") 'yas-new-snippet)
 (define-key yas-minor-mode-map (kbd "C-x i v") 'yas-visit-snippet-file)
 
+;;; haskell
+;;; http://futurismo.biz/archives/2662
+(autoload 'haskell-mode "haskell-mode" nil t)
+(autoload 'haskell-cabal "haskell-cabal" nil t)
 
+(add-to-list 'auto-mode-alist '("\\.hs$" . haskell-mode))
+(add-to-list 'auto-mode-alist '("\\.lhs$" . literate-haskell-mode))
+(add-to-list 'auto-mode-alist '("\\.cabal$" . haskell-cabal-mode))
+
+;; indentの有効
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+(add-hook 'haskell-mode-hook 'font-lock-mode)
+(add-hook 'haskell-mode-hook 'imenu-add-menubar-index)
