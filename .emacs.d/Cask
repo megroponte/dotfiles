@@ -10,3 +10,4 @@
 (depends-on "helm")
 (depends-on "quickrun")
 (depends-on "yasnippet")
+(depends-on "haskell-mode")
