@@ -166,6 +166,7 @@
 (global-set-key (kbd "<f5>") 'quickrun)
 
 ;;; magit
+;;; http://www.magiccircuit.com/emacs-magitメモ
 (require 'magit)
 
 ;;; yasunippet
