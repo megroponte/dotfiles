@@ -162,6 +162,8 @@
 ;;; quickrun
 ;;; https://github.com/syohex/emacs-quickrun
 (require 'quickrun)
+(push '("*quickrun*") popwin:special-display-config)
+(global-set-key (kbd "<f5>") 'quickrun)
 
 ;;; yasunippet
 ;;; http://fukuyama.co/yasnippet
