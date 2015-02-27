@@ -165,6 +165,9 @@
 (push '("*quickrun*") popwin:special-display-config)
 (global-set-key (kbd "<f5>") 'quickrun)
 
+;;; magit
+(require 'magit)
+
 ;;; yasunippet
 ;;; http://fukuyama.co/yasnippet
 ;(add-to-list 'load-path (expand-file-name "~/.emacs.d/elisp/yasnippet"))
