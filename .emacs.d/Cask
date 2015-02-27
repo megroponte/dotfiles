@@ -11,4 +11,4 @@
 (depends-on "quickrun")
 (depends-on "yasnippet")
 (depends-on "haskell-mode")
-(depends-on "magit)
+(depends-on "magit")
