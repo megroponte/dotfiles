@@ -129,8 +129,12 @@
 ;;; http://emacs.tsutomuonoda.com/emacs-anything-el-helm-mode-install/
 (when (require 'helm-config nil t)
   (helm-mode 1)
+  (global-set-key (kbd "M-x") 'helm-M-x)
   (global-set-key (kbd "C-x b") 'helm-mini)
-;  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (setq helm-buffers-fuzzy-matching t
+        helm-recentf-fuzzy-match t
+        helm-M-x-fuzzy-match t)
 )
 
 ;;; auto-complete
