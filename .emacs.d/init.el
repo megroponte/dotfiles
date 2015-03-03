@@ -77,7 +77,7 @@
 (add-to-list 'default-frame-alist '(alpha . 85))
 
 ;;; タイトルバーにファイルのフルパスを表示
-(setq frame-title-format "%f")
+;(setq frame-title-format "%f")
 
 ;;; カレントウィンドウの透明度を変更する
 (set-frame-parameter nil 'alpha 85)
