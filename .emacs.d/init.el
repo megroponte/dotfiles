@@ -107,19 +107,19 @@
 (define-key function-key-map [201326757] [?\C-\M-\\])
 
 ;;; C-h でカーソルの左にある文字を消す
-(define-key global-map "\C-h" 'delete-backward-char)
+(define-key global-map (kbd "C-h") 'delete-backward-char)
 
 ;;; minibuffer 内で、C-k で行ごと消す
 (define-key minibuffer-local-map (kbd "C-k") 'kill-whole-line)
 
 ;;; C-h に割り当てられている関数 help-command を C-x C-h に割り当てる
-(define-key global-map "\C-x\C-h" 'help-command)
+(define-key global-map (kbd "C-x C-h") 'help-command)
 
 ;;; "C-t" でウィンドウを切り替える。初期値はtranspose-chars
-(define-key global-map (kbd "C-t") 'other-window)
+;(define-key global-map (kbd "C-t") 'other-window)
 
 ;;; "C-m"で改行とインデントを行う
-(global-set-key (kbd "C-m") 'newline-and-indent)
+;(global-set-key (kbd "C-m") 'newline-and-indent)
 
 ;;; C-x l で goto-line を実行
 (define-key ctl-x-map "l" 'goto-line) 
