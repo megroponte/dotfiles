@@ -159,6 +159,15 @@
 (setq helm-samewindow nil)
 (push '("*helm-mini*" :height 20) popwin:special-display-config)
 
+;;; recentf-ext
+(require 'recentf)
+(setq recentf-save-file "~/.emacs.d/.recentf")
+(setq recentf-max-save-times 1000)
+(setq recentf-exclude '(".recentf"))
+(setq recentf-auto-cleanup 10)
+(run-with-idle-timer 30 t 'recentf-save-list)
+(require 'recentf-ext)
+
 ;;; quickrun
 ;;; https://github.com/syohex/emacs-quickrun
 (require 'quickrun)
