@@ -24,18 +24,8 @@
 ;;; 色
 (set-face-background 'hl-line "lightskyblue")
 
-;;; 行番号、桁番号を表示する
-;(line-number-mode t)
-;(column-number-mode t)
-
 ;;; 行番号を左側に表示
 (global-linum-mode t)
-
-;;; バッテリー残量表示
-;(display-battery-mode t)
-
-;;; タイトルバーにファイルのフルパスを表示
-;(setq frame-title-format "%f")
 
 ;;; yesと入力するのは面倒なのでyで十分
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -76,9 +66,6 @@
 ;;; デフォルトの透明度を設定する
 (add-to-list 'default-frame-alist '(alpha . 85))
 
-;;; タイトルバーにファイルのフルパスを表示
-;(setq frame-title-format "%f")
-
 ;;; カレントウィンドウの透明度を変更する
 (set-frame-parameter nil 'alpha 85)
 
@@ -115,12 +102,6 @@
 ;;; C-h に割り当てられている関数 help-command を C-x C-h に割り当てる
 (define-key global-map (kbd "C-x C-h") 'help-command)
 
-;;; "C-t" でウィンドウを切り替える。初期値はtranspose-chars
-;(define-key global-map (kbd "C-t") 'other-window)
-
-;;; "C-m"で改行とインデントを行う
-;(global-set-key (kbd "C-m") 'newline-and-indent)
-
 ;;; C-x l で goto-line を実行
 (define-key ctl-x-map "l" 'goto-line) 
 
@@ -149,11 +130,14 @@
   (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
   (ac-config-default))
 
+;;; flycheck
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
 ;;; ac-dabbrev
 (defun ac-dabbrev-expand ()
   (interactive)
   (auto-complete '(ac-source-dabbrev)))
-(global-set-key "\M-/" 'ac-dabbrev-expand)
+(global-set-key (kbd "M-/") 'ac-dabbrev-expand)
 
 ;;; popwin
 ;;; http://d.hatena.ne.jp/m2ym/20110120/1295524932
@@ -193,7 +177,8 @@
 ;(add-to-list 'load-path (expand-file-name "~/.emacs.d/elisp/yasnippet"))
 (require 'yasnippet)
 (setq yas-snippet-dirs
-      '("~/.emacs.d/snippets"))
+      '("~/.emacs.d/snippets"
+	"~/.emacs.d/.cask/24.4.1/elpa/yasnippet-20150212.240/snippets"))
 (yas-global-mode 1)
 
 (custom-set-variables '(yas-trigger-key "TAB"))
