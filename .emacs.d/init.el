@@ -25,8 +25,8 @@
 (set-face-background 'hl-line "lightskyblue")
 
 ;;; 行番号、桁番号を表示する
-(line-number-mode t)
-(column-number-mode t)
+;(line-number-mode t)
+;(column-number-mode t)
 
 ;;; 行番号を左側に表示
 (global-linum-mode t)
@@ -35,7 +35,7 @@
 ;(display-battery-mode t)
 
 ;;; タイトルバーにファイルのフルパスを表示
-(setq frame-title-format "%f")
+;(setq frame-title-format "%f")
 
 ;;; yesと入力するのは面倒なのでyで十分
 (defalias 'yes-or-no-p 'y-or-n-p)
