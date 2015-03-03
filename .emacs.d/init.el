@@ -127,6 +127,7 @@
 ;;; helm
 ;;; https://github.com/emacs-helm/helm/wiki
 ;;; http://emacs.tsutomuonoda.com/emacs-anything-el-helm-mode-install/
+;;; http://d.hatena.ne.jp/sugyan/20140227/1393511303
 (when (require 'helm-config nil t)
   (helm-mode 1)
   (global-set-key (kbd "M-x") 'helm-M-x)
