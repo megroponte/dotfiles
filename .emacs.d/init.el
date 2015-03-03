@@ -138,6 +138,11 @@
         helm-M-x-fuzzy-match t)
 )
 
+;;; direx
+;;; http://cx4a.blogspot.jp/2011/12/popwineldirexel.html
+(require 'direx)
+(global-set-key (kbd "C-x C-j") 'direx:jump-to-directory-other-window)
+
 ;;; auto-complete
 (when (require 'auto-complete-config nil t)
   (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
@@ -155,9 +160,9 @@
 ;;; https://github.com/m2ym/popwin-el/blob/master/README.md
 (require 'popwin)
 (setq display-buffer-function 'popwin:display-buffer)
-;; M-x dired-jump-other-window
-(require 'dired-x)
-(push '(dired-mode :position top) popwin:special-display-config)
+;; direx
+(push '(direx:direx-mode :position left :width 25 :dedicated t)
+      popwin:special-display-config)
 ;; grep
 (push '("*grep*" :noselect t) popwin:special-display-config)
 ;; helm
