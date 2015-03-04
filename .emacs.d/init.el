@@ -73,11 +73,8 @@
 ;;; minibuffer 内で、C-k で行ごと消す
 (define-key minibuffer-local-map (kbd "C-k") 'kill-whole-line)
 
-;;; C-h に割り当てられている関数 help-command を C-x C-h に割り当てる
-(define-key global-map (kbd "C-x C-h") 'help-command)
-
-;;; C-x l で goto-line を実行
-(define-key ctl-x-map "l" 'goto-line) 
+ ;;; C-x l で goto-line を実行
+(define-key ctl-x-map "l" 'goto-line)
 
 ;;; cua-modeの設定(短形編集)
 (cua-mode t)
@@ -85,36 +82,33 @@
 (define-key global-map (kbd "C-x SPC") 'cua-set-rectangle-mark)
 
 ;;; helm
-;;; https://github.com/emacs-helm/helm/wiki
-;;; http://emacs.tsutomuonoda.com/emacs-anything-el-helm-mode-install/
-;;; http://d.hatena.ne.jp/sugyan/20140227/1393511303
-(when (require 'helm-config nil t)
-  (helm-mode 1)
-  (global-set-key (kbd "M-x") 'helm-M-x)
-  (global-set-key (kbd "C-x b") 'helm-mini)
-  (global-set-key (kbd "C-x C-f") 'helm-find-files)
-  (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
-  (setq helm-buffers-fuzzy-matching t
-        helm-recentf-fuzzy-match t
-        helm-M-x-fuzzy-match t)
-)
-
+(require 'helm-config)
+(helm-mode 1)  
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x b") 'helm-mini)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-x C-b") 'helm-buffers-list)
+(define-key helm-map  (kbd "C-h") 'delete-backward-char)
+(define-key helm-find-files-map (kbd "C-h") 'delete-backward-char)
+(define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
+(define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
+(setq helm-buffers-fuzzy-matching t
+	helm-recentf-fuzzy-match t
+	helm-M-x-fuzzy-match t)
+ 
 ;;; direx
 ;;; http://cx4a.blogspot.jp/2011/12/popwineldirexel.html
 (require 'direx)
 (global-set-key (kbd "C-x C-j") 'direx:jump-to-directory-other-window)
 
 ;;; auto-complete
-(when (require 'auto-complete-config nil t)
+(require 'auto-complete-config)
   (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
   (setq ac-auto-start nil)
   (global-set-key (kbd "C-o") 'auto-complete)
   (define-key ac-completing-map (kbd "C-n") 'ac-next)
   (define-key ac-completing-map (kbd "C-p") 'ac-previous)
-  (ac-config-default))
-
-;;; flycheck
-(add-hook 'after-init-hook #'global-flycheck-mode)
+  (ac-config-default)
 
 ;;; ac-dabbrev
 (require 'ac-dabbrev)
