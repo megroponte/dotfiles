@@ -4,24 +4,25 @@
 (require 'cask "/usr/local/Cellar/cask/0.7.2/cask.el")
 (cask-initialize)
 
-;;; 全角スペース/タブ文字可視化
-(setq whitespace-style
-      '(tabs tab-mark spaces space-mark))
-(setq whitespace-space-regexp "\\(\x3000+\\)")
-(setq whitespace-display-mappings
-      '((space-mark ?\x3000 [?\□])
-        (tab-mark   ?\t   [?\xBB ?\t])
-        ))
-(require 'whitespace)
-(global-whitespace-mode 1)
-(set-face-foreground 'whitespace-space "LightSlateGray")
-(set-face-background 'whitespace-space "DarkSlateGray")
-(set-face-foreground 'whitespace-tab "LightSlateGray")
-(set-face-background 'whitespace-tab "DarkSlateGray")
+;;; ファイル名の指定(Mac OS)
+(when (eq system-type 'darwin)
+  (require 'ucs-normalize)
+  (setq file-name-coding-system 'utf-8-hfs)
+  (setq locale-coding-system 'utf-8-hfs))
+
+;;; キーボードのキー設定 for MacOS X
+(setq mac-option-modifier 'meta) ; OptionキーをMetaキーとしてつかう
+(define-key global-map [165] nil)
+(define-key global-map [67109029] nil)
+(define-key global-map [134217893] nil)
+(define-key global-map [201326757] nil)
+(define-key function-key-map [165] [?\\])
+(define-key function-key-map [67109029] [?\C-\\])
+(define-key function-key-map [134217893] [?\M-\\])
+(define-key function-key-map [201326757] [?\C-\M-\\])
 
 ;;; 現在行に色をつける
 (global-hl-line-mode 1)
-;;; 色
 (set-face-background 'hl-line "lightskyblue")
 
 ;;; 行番号を左側に表示
@@ -34,12 +35,6 @@
 (set-language-environment "Japanese")
 (prefer-coding-system 'utf-8)
 
-;;; ファイル名の指定(Mac OS)
-(when (eq system-type 'darwin)
-  (require 'ucs-normalize)
-  (setq file-name-coding-system 'utf-8-hfs)
-  (setq locale-coding-system 'utf-8-hfs))
-
 ;;; フォントロックモード (強調表示等) を有効にする
 (global-font-lock-mode t)
 
@@ -49,25 +44,15 @@
 ;;; 括弧の対応をハイライト.
 (show-paren-mode t)
 (setq show-paren-style 'expression)
-(set-face-background 'show-paren-match-face nil)
-(set-face-underline-p 'show-paren-match-face "red")
+(set-face-attribute 'show-paren-match-face nil
+                    :background nil :foreground nil
+                    :underline "#fff00" :weight 'extra-bold)
 
 ;;; バッファ末尾に余計な改行コードを防ぐための設定
 (setq next-line-add-newlines nil) 
 
 ;;; 時間を表示
 (display-time) 
-
-;;; cua-modeの設定(短形編集)
-(cua-mode t)
-(setq cua-enable-cua-keys nil)
-(define-key global-map (kbd "C-x SPC") 'cua-set-rectangle-mark)
-
-;;; デフォルトの透明度を設定する
-(add-to-list 'default-frame-alist '(alpha . 85))
-
-;;; カレントウィンドウの透明度を変更する
-(set-frame-parameter nil 'alpha 85)
 
 ;;;スタートメッセージを表示しない
 (setq inhibit-startup-message t)
@@ -82,17 +67,6 @@
 ;;; http://0xcc.net/blog/archives/000041.html
 (set-default-coding-systems 'utf-8)
 
-;;; キーボードのキー設定 for MacOS X
-(setq mac-option-modifier 'meta) ; OptionキーをMetaキーとしてつかう
-(define-key global-map [165] nil)
-(define-key global-map [67109029] nil)
-(define-key global-map [134217893] nil)
-(define-key global-map [201326757] nil)
-(define-key function-key-map [165] [?\\])
-(define-key function-key-map [67109029] [?\C-\\])
-(define-key function-key-map [134217893] [?\M-\\])
-(define-key function-key-map [201326757] [?\C-\M-\\])
-
 ;;; C-h でカーソルの左にある文字を消す
 (define-key global-map (kbd "C-h") 'delete-backward-char)
 
@@ -105,6 +79,11 @@
 ;;; C-x l で goto-line を実行
 (define-key ctl-x-map "l" 'goto-line) 
 
+;;; cua-modeの設定(短形編集)
+(cua-mode t)
+(setq cua-enable-cua-keys nil)
+(define-key global-map (kbd "C-x SPC") 'cua-set-rectangle-mark)
+
 ;;; helm
 ;;; https://github.com/emacs-helm/helm/wiki
 ;;; http://emacs.tsutomuonoda.com/emacs-anything-el-helm-mode-install/
@@ -114,6 +93,7 @@
   (global-set-key (kbd "M-x") 'helm-M-x)
   (global-set-key (kbd "C-x b") 'helm-mini)
   (global-set-key (kbd "C-x C-f") 'helm-find-files)
+  (global-set-key (kbd "C-x C-b") 'helm-buffers-list)
   (setq helm-buffers-fuzzy-matching t
         helm-recentf-fuzzy-match t
         helm-M-x-fuzzy-match t)
@@ -127,17 +107,18 @@
 ;;; auto-complete
 (when (require 'auto-complete-config nil t)
   (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
-  (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
+  (setq ac-auto-start nil)
+  (global-set-key (kbd "C-o") 'auto-complete)
+  (define-key ac-completing-map (kbd "C-n") 'ac-next)
+  (define-key ac-completing-map (kbd "C-p") 'ac-previous)
   (ac-config-default))
 
 ;;; flycheck
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;;; ac-dabbrev
-(defun ac-dabbrev-expand ()
-  (interactive)
-  (auto-complete '(ac-source-dabbrev)))
-(global-set-key (kbd "M-/") 'ac-dabbrev-expand)
+(require 'ac-dabbrev)
+(add-to-list 'ac-sources 'ac-source-dabbrev)
 
 ;;; popwin
 ;;; http://d.hatena.ne.jp/m2ym/20110120/1295524932
@@ -174,7 +155,6 @@
 
 ;;; yasunippet
 ;;; http://fukuyama.co/yasnippet
-;(add-to-list 'load-path (expand-file-name "~/.emacs.d/elisp/yasnippet"))
 (require 'yasnippet)
 (setq yas-snippet-dirs
       '("~/.emacs.d/snippets"
@@ -186,6 +166,14 @@
 (define-key yas-minor-mode-map (kbd "C-x i i") 'yas-insert-snippet)
 (define-key yas-minor-mode-map (kbd "C-x i n") 'yas-new-snippet)
 (define-key yas-minor-mode-map (kbd "C-x i v") 'yas-visit-snippet-file)
+
+;;; flycheck
+(add-hook 'after-init-hook #'global-flycheck-mode)
+;; for haskell
+(add-hook 'haskell-mode-hook
+          '(lambda ()
+             (setq flycheck-checker 'haskell-hlint)
+             (flycheck-mode 1)))
 
 ;;; haskell
 ;;; http://futurismo.biz/archives/2662
