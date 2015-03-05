@@ -128,7 +128,7 @@
 (require 'bind-key)
 (bind-keys :map global-map
            ("M-?" . help-for-help)
-           ("C-/" . 'undo)
+           ("C-/" . undo)
            ("C-q" . quickrun)
            ("M-x" . helm-M-x)
            ("C-o" . auto-complete))
