@@ -154,10 +154,11 @@
 (bind-key "TAB" 'helm-execute-persistent-action helm-read-file-map)
 
 ;; yasnippet
-(bind-keys :map yas-minor-mode-map
-           ("C-x i i" . yas-insert-snippet)
-           ("C-x i n" . yas-new-snippet)
-           ("C-x i v" . yas-visit-snippet-file))
+(bind-keys :prefix-map yas-minor-mode-map
+           :prefix "C-x i"
+           ("i" . yas-insert-snippet)
+           ("n" . yas-new-snippet)
+           ("v" . yas-visit-snippet-file))
 
 ;; auto-complete
 (bind-keys :map ac-completing-map
