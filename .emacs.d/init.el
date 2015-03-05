@@ -12,7 +12,7 @@
 
   ;; キーボードのキー設定
   (setq mac-option-modifier 'meta) ; OptionキーをMetaキーとしてつかう
-  (define-key global-map [?¥] [?\\])
+  (define-key global-map [165] [92]) ; \の代わりにバックスラッシュを入力する
 )
 
 ;;; 現在行に色をつける
