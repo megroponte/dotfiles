@@ -128,7 +128,8 @@
 
 ;;; Key binds
 (bind-keys :map global-map
-           ("C-x C-h" . help-command)
+           ("M-?" . help-for-help)
+           ("C-/" . 'undo)
            ("C-x SPC" . cua-set-rectangle-mark)
            ("C-x C-j" . direx:jump-to-directory-other-window)
            ("C-q" . quickrun)
