@@ -13,3 +13,4 @@
 (depends-on "haskell-mode")
 (depends-on "magit")
 (depends-on "direx")
+(depends-on "bind-key")
