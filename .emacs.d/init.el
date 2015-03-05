@@ -97,13 +97,13 @@
 (push '("*helm-mini*" :height 20) popwin:special-display-config)
 
 ;;; recentf-ext
-(require 'recentf)
+(require 'recentf-ext)
 (setq recentf-save-file "~/.emacs.d/.recentf")
 (setq recentf-max-save-times 1000)
 (setq recentf-exclude '(".recentf"))
 (setq recentf-auto-cleanup 10)
-(run-with-idle-timer 30 t 'recentf-save-list)
-(require 'recentf-ext)
+(setq recentf-auto-cleanup-timer (run-with-idle-timer 30 t 'recentf-save-list))
+(recentf-mode 1)
 
 ;;; quickrun
 ;;; https://github.com/syohex/emacs-quickrun
@@ -186,3 +186,4 @@
 (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
 (add-hook 'haskell-mode-hook 'font-lock-mode)
 (add-hook 'haskell-mode-hook 'imenu-add-menubar-index)
+
