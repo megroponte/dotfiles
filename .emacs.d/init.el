@@ -130,13 +130,8 @@
 (bind-keys :map global-map
            ("M-?" . help-for-help)
            ("C-/" . 'undo)
-           ("C-x SPC" . cua-set-rectangle-mark)
-           ("C-x C-j" . direx:jump-to-directory-other-window)
            ("C-q" . quickrun)
            ("M-x" . helm-M-x)
-           ("C-x b" . helm-mini)
-           ("C-x C-f" . helm-find-files)
-           ("C-x C-b" . helm-buffers-list)
            ("C-o" . auto-complete))
 
 ;; とにかく C-h は、1文字消す
@@ -145,8 +140,14 @@
 ;; minibuffer 内で、C-k で行ごと消す
 (bind-key "C-k" 'kill-whole-line minibuffer-local-map)
 
-;; C-x l で goto-line を実行
-(bind-key "l" 'goto-line ctl-x-map)
+;; C-x
+(bind-keys :map ctl-x-map
+           ("l"  . goto-line)
+           ("SPC" . cua-set-rectangle-mark)
+           ("C-j" . direx:jump-to-directory-other-window)
+           ("b" . helm-mini)
+           ("C-f" . helm-find-files)
+           ("C-b" . helm-buffers-list))
 
 ;; helm
 (bind-key "TAB" 'helm-execute-persistent-action helm-find-files-map)
