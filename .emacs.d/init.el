@@ -4,6 +4,8 @@
 (require 'cask "/usr/local/Cellar/cask/0.7.2/cask.el")
 (cask-initialize)
 
+(require 'bind-key)
+
 ;;; ファイル名の指定(Mac OS)
 (when (eq system-type 'darwin)
   (require 'ucs-normalize)
@@ -57,35 +59,13 @@
 ;;; The local variables list in .emacs と言われるのを抑止
 (add-to-list 'ignored-local-variables 'syntax) 
 
-;;; リセットされた場合に UTF-8 に戻す
-;;; http://0xcc.net/blog/archives/000041.html
-(set-default-coding-systems 'utf-8)
-
-;;; C-h でカーソルの左にある文字を消す
-(define-key global-map (kbd "C-h") 'delete-backward-char)
-
-;;; minibuffer 内で、C-k で行ごと消す
-(define-key minibuffer-local-map (kbd "C-k") 'kill-whole-line)
-
- ;;; C-x l で goto-line を実行
-(define-key ctl-x-map "l" 'goto-line)
-
 ;;; cua-modeの設定(短形編集)
 (cua-mode t)
 (setq cua-enable-cua-keys nil)
-(define-key global-map (kbd "C-x SPC") 'cua-set-rectangle-mark)
 
 ;;; helm
 (require 'helm-config)
 (helm-mode 1)  
-(global-set-key (kbd "M-x") 'helm-M-x)
-(global-set-key (kbd "C-x b") 'helm-mini)
-(global-set-key (kbd "C-x C-f") 'helm-find-files)
-(global-set-key (kbd "C-x C-b") 'helm-buffers-list)
-(define-key helm-map  (kbd "C-h") 'delete-backward-char)
-(define-key helm-find-files-map (kbd "C-h") 'delete-backward-char)
-(define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
-(define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
 (setq helm-buffers-fuzzy-matching t
 	helm-recentf-fuzzy-match t
 	helm-M-x-fuzzy-match t)
@@ -93,16 +73,12 @@
 ;;; direx
 ;;; http://cx4a.blogspot.jp/2011/12/popwineldirexel.html
 (require 'direx)
-(global-set-key (kbd "C-x C-j") 'direx:jump-to-directory-other-window)
 
 ;;; auto-complete
 (require 'auto-complete-config)
-  (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
-  (setq ac-auto-start nil)
-  (global-set-key (kbd "C-o") 'auto-complete)
-  (define-key ac-completing-map (kbd "C-n") 'ac-next)
-  (define-key ac-completing-map (kbd "C-p") 'ac-previous)
-  (ac-config-default)
+(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
+(setq ac-auto-start nil)
+(ac-config-default)
 
 ;;; ac-dabbrev
 (require 'ac-dabbrev)
@@ -135,7 +111,6 @@
 ;;; https://github.com/syohex/emacs-quickrun
 (require 'quickrun)
 (push '("*quickrun*") popwin:special-display-config)
-(global-set-key (kbd "C-q") 'quickrun)
 
 ;;; magit
 ;;; http://www.magiccircuit.com/emacs-magitメモ
@@ -151,9 +126,41 @@
 
 (custom-set-variables '(yas-trigger-key "TAB"))
 
-(define-key yas-minor-mode-map (kbd "C-x i i") 'yas-insert-snippet)
-(define-key yas-minor-mode-map (kbd "C-x i n") 'yas-new-snippet)
-(define-key yas-minor-mode-map (kbd "C-x i v") 'yas-visit-snippet-file)
+;;; Key binds
+(bind-keys :map global-map
+           ("C-x C-h" . help-command)
+           ("C-x SPC" . cua-set-rectangle-mark)
+           ("C-x C-j" . direx:jump-to-directory-other-window)
+           ("C-q" . quickrun)
+           ("M-x" . helm-M-x)
+           ("C-x b" . helm-mini)
+           ("C-x C-f" . helm-find-files)
+           ("C-x C-b" . helm-buffers-list)
+           ("C-o" . auto-complete))
+
+;; とにかく C-h は、1文字消す
+(bind-key* "C-h" 'delete-backward-char)
+
+;; minibuffer 内で、C-k で行ごと消す
+(bind-key "C-k" 'kill-whole-line minibuffer-local-map)
+
+;; C-x l で goto-line を実行
+(bind-key "l" 'goto-line ctl-x-map)
+
+;; helm
+(bind-key "TAB" 'helm-execute-persistent-action helm-find-files-map)
+(bind-key "TAB" 'helm-execute-persistent-action helm-read-file-map)
+
+;; yasnippet
+(bind-keys :map yas-minor-mode-map
+           ("C-x i i" . yas-insert-snippet)
+           ("C-x i n" . yas-new-snippet)
+           ("C-x i v" . yas-visit-snippet-file))
+
+;; auto-complete
+(bind-keys :map ac-completing-map
+           ("C-n" . ac-next)
+           ("C-p" . ac-previous))
 
 ;;; flycheck
 (add-hook 'after-init-hook #'global-flycheck-mode)
