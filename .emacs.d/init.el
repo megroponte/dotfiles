@@ -4,8 +4,6 @@
 (require 'cask "/usr/local/Cellar/cask/0.7.2/cask.el")
 (cask-initialize)
 
-(require 'bind-key)
-
 ;;; ファイル名の指定(Mac OS)
 (when (eq system-type 'darwin)
   (require 'ucs-normalize)
@@ -126,7 +124,8 @@
 
 (custom-set-variables '(yas-trigger-key "TAB"))
 
-;;; Key binds
+;;; bind-key
+(require 'bind-key)
 (bind-keys :map global-map
            ("M-?" . help-for-help)
            ("C-/" . 'undo)
