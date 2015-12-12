@@ -1,171 +1,171 @@
-;;; デバッグ用(nil or 1)
+;; デバッグ用(nil or 1)
 (setq debug-on-error 1)
 
-(require 'cask "/usr/local/Cellar/cask/0.7.2/cask.el")
+(require 'cask "/usr/local/Cellar/cask/0.7.4/cask.el")
 (cask-initialize)
 
-;;; ファイル名の指定(Mac OS)
+(require 'use-package)
+
+;; ファイル名の指定(Mac OS)
 (when (eq system-type 'darwin)
   (require 'ucs-normalize)
   (setq file-name-coding-system 'utf-8-hfs)
   (setq locale-coding-system 'utf-8-hfs)
-
-  ;; キーボードのキー設定
+  ; キーボードのキー設定
   (setq mac-option-modifier 'meta) ; OptionキーをMetaキーとしてつかう
   (define-key global-map [165] [92]) ; \の代わりにバックスラッシュを入力する
 )
 
-;;; 現在行に色をつける
+;; メニューバーを消す
+(menu-bar-mode 0)
+
+;; 現在行に色をつける
 (global-hl-line-mode 1)
 (set-face-background 'hl-line "lightskyblue")
 
-;;; 行番号を左側に表示
+;; 行番号を左側に表示
 (global-linum-mode t)
 
-;;; yesと入力するのは面倒なのでyで十分
+;; yesと入力するのは面倒なのでyで十分
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-;;; 日本語設定 (UTF-8)
+;; 日本語設定 (UTF-8)
 (set-language-environment "Japanese")
 (prefer-coding-system 'utf-8)
 
-;;; フォントロックモード (強調表示等) を有効にする
+;; フォントロックモード (強調表示等) を有効にする
 (global-font-lock-mode t)
 
-;;; 一時マークモードの自動有効化
+;; 一時マークモードの自動有効化
 (setq-default transient-mark-mode t)
 
-;;; 括弧の対応をハイライト.
+;; 括弧の対応をハイライト.
 (show-paren-mode t)
 (setq show-paren-style 'expression)
 (set-face-attribute 'show-paren-match-face nil
                     :background nil :foreground nil
                     :underline "#fff00" :weight 'extra-bold)
 
-;;; バッファ末尾に余計な改行コードを防ぐための設定
+;; 括弧を自動的に閉じる
+(electric-pair-mode 1)
+
+;; バッファ末尾に余計な改行コードを防ぐための設定
 (setq next-line-add-newlines nil) 
 
-;;; 時間を表示
+;; 時間を表示
 (display-time) 
 
-;;;スタートメッセージを表示しない
+;;スタートメッセージを表示しない
 (setq inhibit-startup-message t)
 
-;;; BS で選択範囲を消す
+;; BS で選択範囲を消す
 (delete-selection-mode 1)
 
-;;; The local variables list in .emacs と言われるのを抑止
+;; The local variables list in .emacs と言われるのを抑止
 (add-to-list 'ignored-local-variables 'syntax) 
 
-;;; cua-modeの設定(短形編集)
+;; cua-modeの設定(短形編集)
 (cua-mode t)
 (setq cua-enable-cua-keys nil)
 
-;;; helm
-(require 'helm-config)
-(helm-mode 1)  
-(setq helm-buffers-fuzzy-matching t
-	helm-recentf-fuzzy-match t
-	helm-M-x-fuzzy-match t)
- 
-;;; direx
-;;; http://cx4a.blogspot.jp/2011/12/popwineldirexel.html
-(require 'direx)
+;; bind-key
+(use-package bind-key
+  :config
+  (bind-keys :map global-map
+	     ;("M-?" . help-for-help)
+;	     ("C-/" . undo)
+	     ("C-q" . quickrun)
+	     ("C-o" . auto-complete))
+   (bind-keys :map ctl-x-map ; C-x
+	     ("l"  . goto-line)
+	     ("SPC" . cua-set-rectangle-mark)
+	     ("C-j" . direx:jump-to-directory-other-window))
+  (bind-key* "C-h" 'delete-backward-char) ; とにかく C-h は、1文字消す
+  (bind-key "C-k" 'kill-whole-line minibuffer-local-map)) ; minibuffer 内で、C-k で行ごと消す
 
-;;; auto-complete
-(require 'auto-complete-config)
-(add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
-(setq ac-auto-start nil)
-(ac-config-default)
-
-;;; ac-dabbrev
-(require 'ac-dabbrev)
-(add-to-list 'ac-sources 'ac-source-dabbrev)
-
-;;; popwin
-;;; http://d.hatena.ne.jp/m2ym/20110120/1295524932
-;;; https://github.com/m2ym/popwin-el/blob/master/README.md
-(require 'popwin)
-(setq display-buffer-function 'popwin:display-buffer)
-;; direx
-(push '(direx:direx-mode :position left :width 25 :dedicated t)
-      popwin:special-display-config)
-;; grep
-(push '("*grep*" :noselect t) popwin:special-display-config)
 ;; helm
-(setq helm-samewindow nil)
-(push '("*helm-mini*" :height 20) popwin:special-display-config)
+(use-package helm-config
+  :init
+  (bind-key "M-x" 'helm-M-x)
+  (bind-key "C-x b" 'helm-mini)
+  (bind-key "C-x C-f" 'helm-find-files)
+  (bind-key "C-x C-b" 'helm-buffers-list)
+  :config
+  (helm-mode 1))
 
-;;; recentf-ext
-(require 'recentf-ext)
-(setq recentf-save-file "~/.emacs.d/.recentf")
-(setq recentf-max-save-times 1000)
-(setq recentf-exclude '(".recentf"))
-(setq recentf-auto-cleanup 10)
-(setq recentf-auto-cleanup-timer (run-with-idle-timer 30 t 'recentf-save-list))
-(recentf-mode 1)
+;; helm-ls-git
+;; https://github.com/emacs-helm/helm-ls-git
+(use-package helm-ls-git
+  :config
+  (bind-key "C-x C-d" 'helm-browse-project)
+  (bind-key "C-<f6>" 'helm-ls-git-ls))
+
+;; helm-c-yasnippet
+;; https://github.com/emacs-jp/helm-c-yasnippet
+(require 'yasnippet)
+(require 'helm-c-yasnippet)
+(setq helm-yas-space-match-any-greedy t)
+(global-set-key (kbd "C-c y") 'helm-yas-complete)
+(yas-global-mode 1)
+(yas-load-directory "~/.emacs.d/snippets"
+		    "~/.emacs.d/.cask/24.4.1/elpa/yasnippet-20151208.1603/snippets")
+
+;; auto-complete
+(use-package auto-complete-config
+  :config
+  (ac-config-default)
+  (bind-keys :map ac-complete-mode-map
+	     ("C-n" . ac-next)
+	     ("C-p" . ac-previous))
+  (add-to-list 'ac-dictionary-directories "~/.emacs.d/ac-dict")
+  (setq ac-auto-start nil))
+
+;; ac-dabbrev
+(use-package ac-dabbrev
+  :config
+    (add-to-list 'ac-sources 'ac-source-dabbrev))
+
+;; http://rubikitch.com/?s=popwin&x=0&y=0
+(use-package shackle
+  :config
+  (setq shackle-rules
+	'((compilation-mode :align below :ratio 0.2)
+	  ("*Help*" :align right)
+	  ("*Completions*" :align below :ratio 0.3)
+	  ("*helm mini*" :align below :ratio 0.5)
+	  ("\*helm" :regexp t :align below :ratio 0.5)
+	  ("*quickrun*" :align below :ratio 0.3)
+	  ("*grep" :align below :ratio 0.3)
+	  (direx:direx-mode :align left :radio 0.2)))
+  (shackle-mode 1)
+  (setq shackle-lighter ""))
+
+;; undo-tree
+(use-package undo-tree
+  :config
+  (global-undo-tree-mode))
+
+;; recentf-ext
+(use-package recentf-ext
+  :config
+  (setq recentf-save-file "~/.emacs.d/.recentf")
+  (setq recentf-max-saved-items 1000)
+  (setq recentf-exclude '(".recentf"))
+  (setq recentf-auto-cleanup 10)
+  (setq recentf-auto-cleanup-timer (run-with-idle-timer 30 t 'recentf-save-list))
+  (recentf-mode 1))
 
 ;;; quickrun
 ;;; https://github.com/syohex/emacs-quickrun
 (require 'quickrun)
-(push '("*quickrun*") popwin:special-display-config)
-
-;;; magit
-;;; http://www.magiccircuit.com/emacs-magitメモ
-(require 'magit)
-
-;;; yasunippet
-;;; http://fukuyama.co/yasnippet
-(require 'yasnippet)
-(setq yas-snippet-dirs
-      '("~/.emacs.d/snippets"
-	"~/.emacs.d/.cask/24.4.1/elpa/yasnippet-20150212.240/snippets"))
-(yas-global-mode 1)
-
-(custom-set-variables '(yas-trigger-key "TAB"))
-
-;;; bind-key
-(require 'bind-key)
-(bind-keys :map global-map
-           ("M-?" . help-for-help)
-           ("C-/" . undo)
-           ("C-q" . quickrun)
-           ("M-x" . helm-M-x)
-           ("C-o" . auto-complete))
-
-;; とにかく C-h は、1文字消す
-(bind-key* "C-h" 'delete-backward-char)
-
-;; minibuffer 内で、C-k で行ごと消す
-(bind-key "C-k" 'kill-whole-line minibuffer-local-map)
-
-;; C-x
-(bind-keys :map ctl-x-map
-           ("l"  . goto-line)
-           ("SPC" . cua-set-rectangle-mark)
-           ("C-j" . direx:jump-to-directory-other-window)
-           ("b" . helm-mini)
-           ("C-f" . helm-find-files)
-           ("C-b" . helm-buffers-list))
-
-;; helm
-(bind-key "TAB" 'helm-execute-persistent-action helm-find-files-map)
-(bind-key "TAB" 'helm-execute-persistent-action helm-read-file-map)
-
-;; yasnippet
-(bind-keys :prefix-map yas-minor-mode-map
-           :prefix "C-x i"
-           ("i" . yas-insert-snippet)
-           ("n" . yas-new-snippet)
-           ("v" . yas-visit-snippet-file))
-
-;; auto-complete
-(bind-keys :map ac-completing-map
-           ("C-n" . ac-next)
-           ("C-p" . ac-previous))
 
 ;;; flycheck
 (add-hook 'after-init-hook #'global-flycheck-mode)
+(use-package helm-flycheck
+  :config
+  (eval-after-load 'flycheck
+    '(define-key flycheck-mode-map (kbd "C-@") 'helm-flycheck)))
+
 ;; for haskell
 (add-hook 'haskell-mode-hook
           '(lambda ()
@@ -186,4 +186,14 @@
 (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
 (add-hook 'haskell-mode-hook 'font-lock-mode)
 (add-hook 'haskell-mode-hook 'imenu-add-menubar-index)
+
+;; python
+(autoload 'python-mode "python-mode" "Python editing mode" t)
+(custom-set-variables
+ '(py-indent-offset 4))
+
+(add-hook 'python-mode-hook
+	  '(lambda()
+	     (setq tab-width 4)
+	     (setq indent-tabs-mode nil)))
 
