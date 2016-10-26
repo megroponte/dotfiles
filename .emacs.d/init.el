@@ -237,8 +237,3 @@
 	     (setq tab-width 4)
 	     (setq indent-tabs-mode nil)))
 
-;; elixir
-(use-package elixir-mode)
-(use-package alchemist)
-(use-package flycheck-elixir)
-(add-to-list 'elixir-mode-hook 'ac-alchemist-setup)
