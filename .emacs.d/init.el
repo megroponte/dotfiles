@@ -37,10 +37,6 @@
 (el-get-bundle direx)
 (el-get-bundle emacsmirror/python-mode)
 (el-get-bundle undo-tree)
-(el-get-bundle elixir-lang/emacs-elixir)
-(el-get-bundle alchemist)
-(el-get-bundle syohex/emacs-ac-alchemist)
-(el-get-bundle lbolla/emacs-flycheck-elixir)
 
 (require 'use-package)
 
@@ -98,7 +94,7 @@
 
 ;; BS で選択範囲を消す
 (delete-selection-mode 1)
-
+p
 ;; The local variables list in .emacs と言われるのを抑止
 (add-to-list 'ignored-local-variables 'syntax)
 
