@@ -19,3 +19,5 @@
 (depends-on "bind-key")
 (depends-on "python-mode")
 (depends-on "undo-tree")
+(depends-on "elixir-mode")
+(depends-on "alchemist")

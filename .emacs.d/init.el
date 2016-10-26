@@ -1,8 +1,46 @@
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 ;; デバッグ用(nil or 1)
 (setq debug-on-error 1)
 
-(require 'cask "/usr/local/Cellar/cask/0.7.4/cask.el")
-(cask-initialize)
+;(require 'cask "/usr/local/Cellar/cask/0.8.0/cask.el")
+;(cask-initialize)
+
+(when load-file-name
+  (setq user-emacs-directory (file-name-directory load-file-name)))
+
+(add-to-list 'load-path (locate-user-emacs-file "el-get/el-get"))
+(unless (require 'el-get nil 'noerror)
+  (with-current-buffer
+      (url-retrieve-synchronously
+       "https://raw.githubusercontent.com/dimitri/el-get/master/el-get-install.el")
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
+
+(el-get-bundle use-package)
+(el-get-bundle shackle)
+(el-get-bundle flycheck)
+(el-get-bundle recentf-ext)
+(el-get-bundle auto-complete)
+(el-get-bundle ac-dabbrev)
+(el-get-bundle helm)
+(el-get-bundle helm-ls-git)
+(el-get-bundle helm-c-yasnippet)
+(el-get-bundle yasuyk/helm-flycheck)
+(el-get-bundle quickrun)
+(el-get-bundle yasnippet)
+(el-get-bundle haskell-mode)
+(el-get-bundle direx)
+(el-get-bundle emacsmirror/python-mode)
+(el-get-bundle undo-tree)
+(el-get-bundle elixir-lang/emacs-elixir)
+(el-get-bundle alchemist)
+(el-get-bundle syohex/emacs-ac-alchemist)
+(el-get-bundle lbolla/emacs-flycheck-elixir)
 
 (require 'use-package)
 
@@ -50,10 +88,10 @@
 (electric-pair-mode 1)
 
 ;; バッファ末尾に余計な改行コードを防ぐための設定
-(setq next-line-add-newlines nil) 
+(setq next-line-add-newlines nil)
 
 ;; 時間を表示
-(display-time) 
+(display-time)
 
 ;;スタートメッセージを表示しない
 (setq inhibit-startup-message t)
@@ -62,7 +100,7 @@
 (delete-selection-mode 1)
 
 ;; The local variables list in .emacs と言われるのを抑止
-(add-to-list 'ignored-local-variables 'syntax) 
+(add-to-list 'ignored-local-variables 'syntax)
 
 ;; cua-modeの設定(短形編集)
 (cua-mode t)
@@ -73,7 +111,7 @@
   :config
   (bind-keys :map global-map
 	     ;("M-?" . help-for-help)
-;	     ("C-/" . undo)
+	     ;("C-/" . undo)
 	     ("C-q" . quickrun)
 	     ("C-o" . auto-complete))
    (bind-keys :map ctl-x-map ; C-x
@@ -108,7 +146,7 @@
 (global-set-key (kbd "C-c y") 'helm-yas-complete)
 (yas-global-mode 1)
 (yas-load-directory "~/.emacs.d/snippets"
-		    "~/.emacs.d/.cask/24.4.1/elpa/yasnippet-20151208.1603/snippets")
+		    "~/.emacs.d/el-get/yasunippet/snippets")
 
 ;; auto-complete
 (use-package auto-complete-config
@@ -138,7 +176,9 @@
 	  ("*grep" :align below :ratio 0.3)
 	  (direx:direx-mode :align left :radio 0.2)))
   (shackle-mode 1)
-  (setq shackle-lighter ""))
+  (setq shackle-lighter "")
+  (winner-mode 1)
+  (bind-key "C-x <left>" 'winner-undo))
 
 ;; undo-tree
 (use-package undo-tree
@@ -197,3 +237,8 @@
 	     (setq tab-width 4)
 	     (setq indent-tabs-mode nil)))
 
+;; elixir
+(use-package elixir-mode)
+(use-package alchemist)
+(use-package flycheck-elixir)
+(add-to-list 'elixir-mode-hook 'ac-alchemist-setup)
