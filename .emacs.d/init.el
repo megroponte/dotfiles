@@ -2,7 +2,7 @@
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
-(package-initialize)
+;(package-initialize)
 
 ;; デバッグ用(nil or 1)
 (setq debug-on-error 1)
@@ -94,7 +94,7 @@
 
 ;; BS で選択範囲を消す
 (delete-selection-mode 1)
-p
+
 ;; The local variables list in .emacs と言われるのを抑止
 (add-to-list 'ignored-local-variables 'syntax)
 
@@ -232,4 +232,3 @@ p
 	  '(lambda()
 	     (setq tab-width 4)
 	     (setq indent-tabs-mode nil)))
-
