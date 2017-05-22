@@ -2,7 +2,7 @@
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
-;(package-initialize)
+(package-initialize)
 
 ;; デバッグ用(nil or 1)
 (setq debug-on-error 1)
@@ -30,15 +30,16 @@
 (el-get-bundle helm)
 (el-get-bundle helm-ls-git)
 (el-get-bundle helm-c-yasnippet)
+(el-get-bundle helm-descbinds)
 (el-get-bundle yasuyk/helm-flycheck)
 (el-get-bundle quickrun)
 (el-get-bundle yasnippet)
 (el-get-bundle haskell-mode)
+(el-get-bundle ghc-mod)
 (el-get-bundle direx)
 (el-get-bundle emacsmirror/python-mode)
 (el-get-bundle undo-tree)
-
-(require 'use-package)
+(el-get-bundle which-key)
 
 ;; ファイル名の指定(Mac OS)
 (when (eq system-type 'darwin)
@@ -55,7 +56,7 @@
 
 ;; 現在行に色をつける
 (global-hl-line-mode 1)
-(set-face-background 'hl-line "lightskyblue")
+(set-face-background 'hl-line "blue")
 
 ;; 行番号を左側に表示
 (global-linum-mode t)
@@ -105,12 +106,7 @@
 ;; bind-key
 (use-package bind-key
   :config
-  (bind-keys :map global-map
-	     ;("M-?" . help-for-help)
-	     ;("C-/" . undo)
-	     ("C-q" . quickrun)
-	     ("C-o" . auto-complete))
-   (bind-keys :map ctl-x-map ; C-x
+  (bind-keys :map ctl-x-map ; C-x
 	     ("l"  . goto-line)
 	     ("SPC" . cua-set-rectangle-mark)
 	     ("C-j" . direx:jump-to-directory-other-window))
@@ -119,11 +115,10 @@
 
 ;; helm
 (use-package helm-config
-  :init
-  (bind-key "M-x" 'helm-M-x)
-  (bind-key "C-x b" 'helm-mini)
-  (bind-key "C-x C-f" 'helm-find-files)
-  (bind-key "C-x C-b" 'helm-buffers-list)
+  :bind (("M-x" . helm-M-x)
+	 ("C-x b" . helm-mini)
+	 ("C-x C-f" . helm-find-files)
+	 ("C-x C-b" . helm-buffers-list))
   :config
   (helm-mode 1))
 
@@ -144,8 +139,20 @@
 (yas-load-directory "~/.emacs.d/snippets"
 		    "~/.emacs.d/el-get/yasunippet/snippets")
 
+;; helm-descbinds
+;; https://github.com/emacs-helm/helm-descbinds
+(use-package helm-descbinds
+  :init
+  (helm-descbinds-mode))
+
+;; which-key
+(use-package which-key
+  :init
+  (which-key-mode t))
+
 ;; auto-complete
 (use-package auto-complete-config
+  :bind (("C-o" . auto-complete))
   :config
   (ac-config-default)
   (bind-keys :map ac-complete-mode-map
@@ -182,32 +189,36 @@
   (global-undo-tree-mode))
 
 ;; recentf-ext
+;; http://qiita.com/catatsuy/items/f9fad90fa1352a4d3161
 (use-package recentf-ext
+  :init
+  (add-hook 'after-init-hook (lambda () (recentf-open-files)))
+  :bind (("C-x C-r" . recentf-open-files))
   :config
   (setq recentf-save-file "~/.emacs.d/.recentf")
-  (setq recentf-max-saved-items 1000)
+  (setq recentf-max-saved-items 2000)
   (setq recentf-exclude '(".recentf"))
   (setq recentf-auto-cleanup 10)
-  (setq recentf-auto-cleanup-timer (run-with-idle-timer 30 t 'recentf-save-list))
+  (setq recentf-auto-save-timer (run-with-idle-timer 30 t 'recentf-save-list))
   (recentf-mode 1))
 
 ;;; quickrun
 ;;; https://github.com/syohex/emacs-quickrun
-(require 'quickrun)
+;(require 'quickrun)
+(use-package quickrun
+  :bind ("C-q" . quickrun))
 
 ;;; flycheck
+;(use-package flycheck
+;  :ensure t
+;  :init (global-flycheck-mode))
 (add-hook 'after-init-hook #'global-flycheck-mode)
 (use-package helm-flycheck
   :config
   (eval-after-load 'flycheck
-    '(define-key flycheck-mode-map (kbd "C-@") 'helm-flycheck)))
+    '(define-key flycheck-mode-map (kbd "C-c @") 'helm-flycheck)))
 
 ;; for haskell
-(add-hook 'haskell-mode-hook
-          '(lambda ()
-             (setq flycheck-checker 'haskell-hlint)
-             (flycheck-mode 1)))
-
 ;;; haskell
 ;;; http://futurismo.biz/archives/2662
 (autoload 'haskell-mode "haskell-mode" nil t)
@@ -217,18 +228,52 @@
 (add-to-list 'auto-mode-alist '("\\.lhs$" . literate-haskell-mode))
 (add-to-list 'auto-mode-alist '("\\.cabal$" . haskell-cabal-mode))
 
-;; indentの有効
+;;; ghc-mod
+;;; http://hikaru515.hatenablog.com/entry/2016/09/12/021206#fn.3
+(autoload 'ghc-init "ghc" nil t)
+(autoload 'ghc-debug "ghc" nil t)
+
+;;; indentの有効
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
 (add-hook 'haskell-mode-hook 'font-lock-mode)
 (add-hook 'haskell-mode-hook 'imenu-add-menubar-index)
 
+;;; flycheckの有効
+(add-hook 'haskell-mode-hook
+          '(lambda ()
+             (setq flycheck-checker 'haskell-hlint)
+             (flycheck-mode 1)))
+
+;;; ghc-modの有効
+(add-hook 'haskell-mode-hook (lambda () (ghc-init)))
+
+(setq haskell-process-type 'stack-ghc)
+(setq haskell-program-name "/usr/local/bin/stack ghci")
+
+;;; stack用quickrunの設定
+;;; https://github.com/syohex/emacs-quickrun
+(quickrun-add-command "haskell"
+		      '((:command . "/usr/local/bin/stack runghc")
+			:override t))
+
 ;; python
 (autoload 'python-mode "python-mode" "Python editing mode" t)
 (custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages (quote (flycheck)))
  '(py-indent-offset 4))
 
 (add-hook 'python-mode-hook
 	  '(lambda()
 	     (setq tab-width 4)
 	     (setq indent-tabs-mode nil)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
