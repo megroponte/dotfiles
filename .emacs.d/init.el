@@ -92,9 +92,9 @@
 ;; 括弧の対応をハイライト.
 (show-paren-mode t)
 (setq show-paren-style 'expression)
-(set-face-attribute 'show-paren-match-face nil
-                    :background nil :foreground nil
-                    :underline "#fff00" :weight 'extra-bold)
+(set-face-attribute 'show-paren-match nil
+		    :background 'unspecified
+		    :underline "turquoise")
 
 ;; 括弧を自動的に閉じる
 (electric-pair-mode 1)
